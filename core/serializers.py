@@ -4,7 +4,7 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["wca_id", "pseudo"]
+        fields = ["wca_id", "name"]
 
 class VehicleSerializer(serializers.ModelSerializer):
     class Meta:
