@@ -1,4 +1,4 @@
-from .models import User, Competition, Travel, Vehicle
+from .models import User, Vehicle, Competition, Travel
 from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
