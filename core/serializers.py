@@ -4,7 +4,7 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["wca_id", "name"]
+        fields = ["wca_id", "name", "allowed_users"]
 
 class VehicleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,6 +28,7 @@ class TravelSerializer(serializers.ModelSerializer):
         model = Travel
         fields = [
             "name",
+            "owner",
             "start_location_name",
             "start_latitude",
             "start_longitude",

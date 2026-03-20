@@ -5,6 +5,11 @@ from django.core.validators import MinValueValidator
 class User(models.Model):
     wca_id = models.CharField(max_length=10, unique=True, db_index=True)
     name = models.CharField(max_length=25, db_index=True)
+    allowed_users = models.ManyToManyField(
+        "self",
+        symmetrical=False,
+        related_name="allowed_by",
+    )
 
     def __str__(self):
         return self.name
@@ -13,7 +18,7 @@ class User(models.Model):
 class Vehicle(models.Model):
     name = models.CharField(max_length=25, db_index=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    seats = models.IntegerField(validators=MinValueValidator(1))
+    seats = models.IntegerField(validators=[MinValueValidator(1)])
 
     def __str__(self):
         return self.name
@@ -35,6 +40,7 @@ class Competition(models.Model):
 
 class Travel(models.Model):
     name = models.CharField(max_length=50, unique=True, db_index=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     start_location_name = models.CharField(max_length=100)
     start_latitude = models.FloatField(null=False)
