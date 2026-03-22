@@ -15,18 +15,12 @@ from core.serializers import (
 
 from .permissions import IsOwner, IsOwnerOrAllowedOrSelfPassenger, ReadOnly
 
-# DRF fournit automatiquement les actions :
-#   list → GET /users/
-#   retrieve → GET /users/<id>/
-#   create → POST /users/
-#   update / partial_update → PUT/PATCH
-#   destroy → DELETE
-
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    # faudra peut-être adapter les permissions pour search
 
     def get_queryset(self):
         return User.objects.filter(pk=self.request.user.pk)
@@ -38,6 +32,10 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def add_to_whitelist(self, request, pk=None):
         user_to_add = get_object_or_404(User, pk=pk)
+
+        if user_to_add == request.user:
+            return Response({"detail": "Cannot add yourself to the whitelist"}, status=400)
+
         request.user.allowed_users.add(user_to_add)
         return Response({"detail": f"{user_to_add.pseudo} added to whitelist"}, status=200)
 
@@ -45,6 +43,10 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def remove_from_whitelist(self, request, pk=None):
         user_to_remove = get_object_or_404(User, pk=pk)
+
+        if user_to_remove not in request.user.allowed_users.all():
+            return Response({"detail": f"{user_to_remove.pseudo} is already not in the whitelist"}, status=400)
+        
         request.user.allowed_users.remove(user_to_remove)
         return Response({"detail": f"{user_to_remove.pseudo} removed from whitelist"}, status=200)
     
@@ -66,6 +68,9 @@ class VehicleViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    # pour changer le nombre de places d'un véhicule,
+    # vérifier si pas de trajets avec + de personnes que le nouveau nombre
 
 
 class CompetitionViewSet(viewsets.ModelViewSet):
@@ -114,8 +119,7 @@ class TravelViewSet(viewsets.ModelViewSet):
         if user_to_remove not in travel.passengers.all():
             return Response({"detail": "User is not a passenger"}, status=400)
         
-        if request.user != travel.owner or request.user not in travel.passengers.all() \
-            and request.user != user_to_remove:
+        if request.user != travel.owner and request.user != user_to_remove:
             return Response({"detail": "Not allowed"}, status=403)
         
         travel.passengers.remove(user_to_remove)
@@ -127,5 +131,5 @@ class TravelViewSet(viewsets.ModelViewSet):
         travel = self.get_object()
         passengers = travel.passengers.all()
 
-        serializer = self.get_serializer(passengers, many=True)
+        serializer = UserSerializer(passengers, many=True)
         return Response(serializer.data)
