@@ -37,4 +37,5 @@ class TravelSerializer(serializers.ModelSerializer):
             "end_longitude",
             "competition",
             "vehicle",
+            "passengers",
         ]

@@ -15,7 +15,7 @@ class User(AbstractUser):
     def __str__(self):
         return self.name
     
-    REQUIRED_FIELDS = ['email', 'wca_id', 'pseudo'] # uniquement pour createsuperuser
+    REQUIRED_FIELDS = ['wca_id', 'pseudo'] # uniquement pour createsuperuser
 
 
 class Vehicle(models.Model):
@@ -55,6 +55,11 @@ class Travel(models.Model):
 
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+    passengers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        symmetrical=False,
+        related_name="is_passenger_of",
+    )
 
     def __str__(self):
         return self.name
