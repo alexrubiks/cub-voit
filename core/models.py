@@ -6,7 +6,6 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     wca_id = models.CharField(max_length=10, unique=True, blank=True, db_index=True)
     pseudo = models.CharField(max_length=25, db_index=True)
-
     allowed_users = models.ManyToManyField(
         "self",
         symmetrical=False,
