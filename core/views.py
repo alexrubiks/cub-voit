@@ -1,8 +1,10 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 from core.models import Competition, Travel, User, Vehicle
 from core.serializers import CompetitionSerializer, TravelSerializer, UserSerializer, VehicleSerializer
-from .permissions import IsOwner
+from .permissions import IsOwner, ReadOnly
 
 # DRF fournit automatiquement les actions :
 #   list → GET /users/
@@ -15,6 +17,13 @@ from .permissions import IsOwner
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        return User.objects.filter(pk=self.request.user.pk)
+    
+    def create(self, request, *args, **kwargs):
+        return Response({"detail": "Creation not allowed via this endpoint."}, status=405)
 
 
 class VehicleViewSet(viewsets.ModelViewSet):
@@ -32,6 +41,7 @@ class VehicleViewSet(viewsets.ModelViewSet):
 class CompetitionViewSet(viewsets.ModelViewSet):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
+    permission_classes = [IsAuthenticated, ReadOnly]
 
 
 class TravelViewSet(viewsets.ModelViewSet):

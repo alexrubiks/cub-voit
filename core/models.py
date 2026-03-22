@@ -4,18 +4,18 @@ from django.core.validators import MinValueValidator
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
-    wca_id = models.CharField(max_length=10, blank=True, unique=True, null=True)
-    pseudo = models.CharField(max_length=25)
+    wca_id = models.CharField(max_length=10, unique=True, blank=True, db_index=True)
+    pseudo = models.CharField(max_length=25, db_index=True)
 
-    REQUIRED_FIELDS = ['email', 'wca_id', 'pseudo']
+    REQUIRED_FIELDS = ['email', 'wca_id', 'pseudo'] # uniquement pour createsuperuser
     # allowed_users = models.ManyToManyField(
     #     "self",
     #     symmetrical=False,
     #     related_name="allowed_by",
     # )
 
-    # def __str__(self):
-    #     return self.name
+    def __str__(self):
+        return self.name
 
 
 class Vehicle(models.Model):
