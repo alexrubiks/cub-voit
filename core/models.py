@@ -7,15 +7,16 @@ class User(AbstractUser):
     wca_id = models.CharField(max_length=10, unique=True, blank=True, db_index=True)
     pseudo = models.CharField(max_length=25, db_index=True)
 
-    REQUIRED_FIELDS = ['email', 'wca_id', 'pseudo'] # uniquement pour createsuperuser
-    # allowed_users = models.ManyToManyField(
-    #     "self",
-    #     symmetrical=False,
-    #     related_name="allowed_by",
-    # )
+    allowed_users = models.ManyToManyField(
+        "self",
+        symmetrical=False,
+        related_name="allowed_by",
+    )
 
     def __str__(self):
         return self.name
+    
+    REQUIRED_FIELDS = ['email', 'wca_id', 'pseudo'] # uniquement pour createsuperuser
 
 
 class Vehicle(models.Model):

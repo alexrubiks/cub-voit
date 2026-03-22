@@ -1,10 +1,12 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from core.models import Competition, Travel, User, Vehicle
 from core.serializers import CompetitionSerializer, TravelSerializer, UserSerializer, VehicleSerializer
 from .permissions import IsOwner, ReadOnly
+from django.shortcuts import get_object_or_404
 
 # DRF fournit automatiquement les actions :
 #   list → GET /users/
@@ -24,6 +26,27 @@ class UserViewSet(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         return Response({"detail": "Creation not allowed via this endpoint."}, status=405)
+    
+    # POST /users/<id>/add_to_whitelist/
+    @action(detail=True, methods=['post'])
+    def add_to_whitelist(self, request, pk=None):
+        user_to_add = get_object_or_404(User, pk=pk) # redemander à fiableGPT
+        request.user.allowed_users.add(user_to_add)
+        return Response({"detail": f"{user_to_add.pseudo} added to whitelist"}, status=200)
+
+    # POST /users/<id>/remove_from_whitelist/
+    @action(detail=True, methods=['post'])
+    def remove_from_whitelist(self, request, pk=None):
+        user_to_remove = get_object_or_404(User, pk=pk) # redemander à fiableGPT
+        request.user.allowed_users.remove(user_to_remove)
+        return Response({"detail": f"{user_to_remove.pseudo} removed from whitelist"}, status=200)
+    
+    # GET /users/list_whitelist/
+    @action(detail=False, methods=['get'])
+    def list_whitelist(self, request):
+        whitelist = request.user.allowed_users.all()
+        serializer = self.get_serializer(whitelist, many=True)
+        return Response(serializer.data)
 
 
 class VehicleViewSet(viewsets.ModelViewSet):
