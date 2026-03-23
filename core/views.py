@@ -13,13 +13,18 @@ from core.serializers import (
     VehicleSerializer,
 )
 
-from .permissions import IsOwner, IsOwnerOrAllowedOrSelfPassenger, ReadOnly
+from .permissions import (
+    IsOwner,
+    IsOwnerOrAllowedOrSelfPassenger,
+    IsSelf,
+    ReadOnly
+)
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated, IsSelf]
     # faudra peut-être adapter les permissions pour search
 
     def get_queryset(self):
@@ -95,7 +100,7 @@ class TravelViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-    # POST /travel/<id>/add_passenger/
+    # POST /travels/<id>/add_passenger/
     @action(detail=True, methods=['post'])
     def add_passenger(self, request, pk=None):
         travel = self.get_object()
@@ -103,33 +108,39 @@ class TravelViewSet(viewsets.ModelViewSet):
         
         if request.user != travel.owner and request.user != user_to_add:
             return Response({"detail": "Not allowed"}, status=403)
-        
-        if travel.passengers.count() + 1 > travel.vehicle.seats:
+
+        print(user_to_add, travel.owner)
+        if user_to_add == travel.owner:
+            return Response({"detail": "Cannot add yourself as a passenger"}, status=400)
+
+        if user_to_add in travel.passengers.all():
+            return Response({"detail": f"{user_to_add.pseudo} already added"}, status=400)
+
+        if travel.passengers.count() + 1 >= travel.vehicle.seats:
             return Response({"detail": "Cannot add passenger: vehicle is full"}, status=400)
 
         travel.passengers.add(user_to_add)
         return Response({"detail": f"{user_to_add.pseudo} added to passengers of {travel.name}"}, status=200)
 
-    # POST /travel/<id>/remove_passenger/
+    # POST /travels/<id>/remove_passenger/
     @action(detail=True, methods=['post'])
     def remove_passenger(self, request, pk=None):
         travel = self.get_object()
         user_to_remove = get_object_or_404(User, pk=request.data.get("user_id")) # nom de "user_id" à modif au besoin
 
-        if user_to_remove not in travel.passengers.all():
-            return Response({"detail": "User is not a passenger"}, status=400)
-        
         if request.user != travel.owner and request.user != user_to_remove:
             return Response({"detail": "Not allowed"}, status=403)
-        
+
+        if user_to_remove not in travel.passengers.all():
+            return Response({"detail": f"{user_to_remove.pseudo} is not a passenger"}, status=400)
+
         travel.passengers.remove(user_to_remove)
         return Response({"detail": f"{user_to_remove.pseudo} removed from passengers of {travel.name}"}, status=200)
     
-    # GET /travel/<id>/list_passengers/
+    # GET /travels/<id>/list_passengers/
     @action(detail=True, methods=['get'])
     def list_passengers(self, request, pk=None):
         travel = self.get_object()
         passengers = travel.passengers.all()
-
         serializer = UserSerializer(passengers, many=True)
         return Response(serializer.data)

@@ -13,7 +13,7 @@ class User(AbstractUser):
     )
 
     def __str__(self):
-        return self.name
+        return self.pseudo
     
     REQUIRED_FIELDS = ['wca_id', 'pseudo'] # uniquement pour createsuperuser
 

@@ -7,35 +7,21 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id", "pseudo", "wca_id"]
 
 class VehicleSerializer(serializers.ModelSerializer):
+    owner = UserSerializer(read_only=True)
+    
     class Meta:
         model = Vehicle
-        fields = ["name", "owner", "seats"]
+        fields = "__all__"
 
 class CompetitionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Competition
-        fields = [
-            "name",
-            "first_day",
-            "last_day",
-            "location_name",
-            "latitude",
-            "longitude",
-        ]
+        fields = "__all__"
 
 class TravelSerializer(serializers.ModelSerializer):
+    owner = UserSerializer(read_only=True)
+    passengers = UserSerializer(many=True, read_only=True)
+
     class Meta:
         model = Travel
-        fields = [
-            "name",
-            "owner",
-            "start_location_name",
-            "start_latitude",
-            "start_longitude",
-            "end_location_name",
-            "end_latitude",
-            "end_longitude",
-            "competition",
-            "vehicle",
-            "passengers",
-        ]
+        fields = "__all__"
