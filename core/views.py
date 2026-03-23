@@ -2,6 +2,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -13,25 +14,42 @@ from core.serializers import (
     VehicleSerializer,
 )
 
-from .permissions import (
-    IsOwner,
-    IsOwnerOrAllowedOrSelfPassenger,
-    IsSelf,
-    ReadOnly
-)
+from .pagination import SmallResultsPagination
+from .permissions import IsOwner, IsOwnerOrAllowedOrSelfPassenger, IsSelf, ReadOnly
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
     permission_classes = [IsAuthenticated, IsSelf]
-    # faudra peut-être adapter les permissions pour search
+
+    filter_backends = [SearchFilter]
+    search_fields = ["pseudo", "wca_id"]
+
+    pagination_class = SmallResultsPagination
 
     def get_queryset(self):
-        return User.objects.filter(pk=self.request.user.pk)
+        user = self.request.user
+
+        if self.action == "list":
+            search = self.request.query_params.get("search", "").strip()
+            if search:
+                return User.objects.filter(
+                    Q(pseudo__icontains=search) | Q(wca_id__icontains=search)
+                )
+            return User.objects.none()
+
+        return User.objects.filter(pk=user.pk)
     
     def create(self, request, *args, **kwargs):
         return Response({"detail": "Creation not allowed via this endpoint."}, status=405)
+    
+    # GET /users/me/
+    @action(detail=False, methods=['get'])
+    def me(self, request):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
     
     # POST /users/<id>/add_to_whitelist/
     @action(detail=True, methods=['post'])
@@ -66,6 +84,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class VehicleViewSet(viewsets.ModelViewSet):
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
+
     permission_classes = [IsAuthenticated, IsOwner]
     
     def get_queryset(self):
@@ -74,19 +93,22 @@ class VehicleViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-    # pour changer le nombre de places d'un véhicule,
-    # vérifier si pas de trajets avec + de personnes que le nouveau nombre
-
 
 class CompetitionViewSet(viewsets.ModelViewSet):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
+
     permission_classes = [IsAuthenticated, ReadOnly]
+    filter_backends = [SearchFilter]
+    search_fields = ["name", "location_name"]
+
+    pagination_class = SmallResultsPagination
 
 
 class TravelViewSet(viewsets.ModelViewSet):
     queryset = Travel.objects.all()
     serializer_class = TravelSerializer
+
     permission_classes = [IsAuthenticated, IsOwnerOrAllowedOrSelfPassenger]
 
     def get_queryset(self):
