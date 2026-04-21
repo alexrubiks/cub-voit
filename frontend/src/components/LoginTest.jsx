@@ -1,4 +1,5 @@
 import { useState } from "react";
+import TravelList from "./TravelList";
 
 export default function LoginTest() {
   const [username, setUsername] = useState("");
@@ -58,13 +59,6 @@ export default function LoginTest() {
       />
 
       <button onClick={handleLogin}>Login</button>
-
-      <h3>Travels:</h3>
-      <ul>
-        {travels.map((t) => (
-          <li key={t.id}>{t.name}</li>
-        ))}
-      </ul>
     </div>
   );
 }
