@@ -40,6 +40,7 @@ class TravelSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "owner",
+            "date",
             "start_location_name",
             "start_latitude",
             "start_longitude",

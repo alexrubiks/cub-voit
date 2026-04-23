@@ -45,6 +45,7 @@ class Travel(models.Model):
     name = models.CharField(max_length=50, unique=True, db_index=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
+    date = models.DateField(null=False)
     start_location_name = models.CharField(max_length=100)
     start_latitude = models.FloatField(null=False)
     start_longitude = models.FloatField(null=False)

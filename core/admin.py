@@ -32,6 +32,6 @@ class CompetitionAdmin(admin.ModelAdmin):
 
 @admin.register(Travel)
 class TravelAdmin(admin.ModelAdmin):
-    list_display = ("name", "owner", "start_location_name", "end_location_name")
-    search_fields = ("name", "start_location_name", "end_location_name")
+    list_display = ("name", "owner", "date", "start_location_name", "end_location_name")
+    search_fields = ("name", "date", "start_location_name", "end_location_name")
     list_filter = ("owner",)
