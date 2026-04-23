@@ -11,8 +11,8 @@ function App() {
     <Routes>
       <Route element={<AppLayout />}>
         
-        <Route path="/" element={<Travels />} />
-        <Route path="/map" element={<Map />} />
+        <Route path="/" element={<Map />} />
+        <Route path="/travels" element={<Travels />} />
         <Route path="/create" element={<CreateTravel />} />
         <Route path="/account" element={<Account />} />
 
