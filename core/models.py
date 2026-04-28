@@ -6,6 +6,11 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     wca_id = models.CharField(max_length=10, unique=True, blank=True, db_index=True)
     pseudo = models.CharField(max_length=25, db_index=True)
+
+    location_name = models.CharField(max_length=100)
+    location_latitude = models.FloatField()
+    location_longitude = models.FloatField()
+
     allowed_users = models.ManyToManyField(
         "self",
         symmetrical=False,
@@ -28,12 +33,14 @@ class Vehicle(models.Model):
 
 
 class Competition(models.Model):
-    name = models.CharField(max_length=100, unique=True, db_index=True)
+    external_id = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=100, db_index=True)
 
     first_day = models.DateField()
     last_day = models.DateField()
 
     location_name = models.CharField(max_length=100)
+    country = models.CharField(max_length=10)
     latitude = models.FloatField(null=False)
     longitude = models.FloatField(null=False)
 
@@ -42,7 +49,7 @@ class Competition(models.Model):
 
 
 class Travel(models.Model):
-    name = models.CharField(max_length=50, unique=True, db_index=True)
+    name = models.CharField(max_length=50, db_index=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     date = models.DateField(null=False)

@@ -1,0 +1,142 @@
+[
+  {
+    "model": "core.competition",
+    "pk": 1,
+    "fields": {
+      "external_id": "EXT-2025-001",
+      "name": "Paris Open Championship",
+      "first_day": "2025-03-10",
+      "last_day": "2025-03-12",
+      "location_name": "Paris",
+      "country": "FR",
+      "latitude": 48.8566,
+      "longitude": 2.3522
+    }
+  },
+  {
+    "model": "core.competition",
+    "pk": 2,
+    "fields": {
+      "external_id": "EXT-2025-002",
+      "name": "Berlin Winter Cup",
+      "first_day": "2025-04-05",
+      "last_day": "2025-04-06",
+      "location_name": "Berlin",
+      "country": "DE",
+      "latitude": 52.52,
+      "longitude": 13.405
+    }
+  },
+  {
+    "model": "core.competition",
+    "pk": 3,
+    "fields": {
+      "external_id": "EXT-2025-003",
+      "name": "Madrid Spring Invitational",
+      "first_day": "2025-04-18",
+      "last_day": "2025-04-20",
+      "location_name": "Madrid",
+      "country": "ES",
+      "latitude": 40.4168,
+      "longitude": -3.7038
+    }
+  },
+  {
+    "model": "core.competition",
+    "pk": 4,
+    "fields": {
+      "external_id": "EXT-2025-004",
+      "name": "Roma Grand Prix",
+      "first_day": "2025-05-02",
+      "last_day": "2025-05-04",
+      "location_name": "Rome",
+      "country": "IT",
+      "latitude": 41.9028,
+      "longitude": 12.4964
+    }
+  },
+  {
+    "model": "core.competition",
+    "pk": 5,
+    "fields": {
+      "external_id": "EXT-2025-005",
+      "name": "Amsterdam Open",
+      "first_day": "2025-05-15",
+      "last_day": "2025-05-17",
+      "location_name": "Amsterdam",
+      "country": "NL",
+      "latitude": 52.3676,
+      "longitude": 4.9041
+    }
+  },
+  {
+    "model": "core.competition",
+    "pk": 6,
+    "fields": {
+      "external_id": "EXT-2025-006",
+      "name": "Brussels International",
+      "first_day": "2025-06-01",
+      "last_day": "2025-06-01",
+      "location_name": "Bruxelles",
+      "country": "BE",
+      "latitude": 50.8503,
+      "longitude": 4.3517
+    }
+  },
+  {
+    "model": "core.competition",
+    "pk": 7,
+    "fields": {
+      "external_id": "EXT-2025-007",
+      "name": "Zürich Summer Classic",
+      "first_day": "2025-06-20",
+      "last_day": "2025-06-22",
+      "location_name": "Zürich",
+      "country": "CH",
+      "latitude": 47.3769,
+      "longitude": 8.5417
+    }
+  },
+  {
+    "model": "core.competition",
+    "pk": 8,
+    "fields": {
+      "external_id": "EXT-2025-008",
+      "name": "Lisbon Atlantic Cup",
+      "first_day": "2025-07-04",
+      "last_day": "2025-07-06",
+      "location_name": "Lisbonne",
+      "country": "PT",
+      "latitude": 38.7223,
+      "longitude": -9.1393
+    }
+  },
+  {
+    "model": "core.competition",
+    "pk": 9,
+    "fields": {
+      "external_id": "EXT-2025-009",
+      "name": "Vienna Autumn Trophy",
+      "first_day": "2025-09-12",
+      "last_day": "2025-09-14",
+      "location_name": "Vienne",
+      "country": "AT",
+      "latitude": 48.2082,
+      "longitude": 16.3738
+    }
+  },
+  {
+    "model": "core.competition",
+    "pk": 10,
+    "fields": {
+      "external_id": "EXT-2025-010",
+      "name": "Lyon Regional Championship",
+      "first_day": "2025-10-03",
+      "last_day": "2025-10-05",
+      "location_name": "Lyon",
+      "country": "FR",
+      "latitude": 45.764,
+      "longitude": 4.8357
+    }
+  }
+]

@@ -2,14 +2,28 @@ from .models import User, Vehicle, Competition, Travel
 from rest_framework import serializers
 
 
-class UserSerializer(serializers.ModelSerializer):
+class PublicUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "pseudo", "wca_id"]
 
 
+class CurrentUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "pseudo",
+            "wca_id",
+            "email",
+            "location_name",
+            "location_latitude",
+            "location_longitude",
+        ]
+
+
 class VehicleSerializer(serializers.ModelSerializer):
-    owner = UserSerializer(read_only=True)
+    owner = PublicUserSerializer(read_only=True)
     
     class Meta:
         model = Vehicle
@@ -21,9 +35,11 @@ class CompetitionSerializer(serializers.ModelSerializer):
         model = Competition
         fields = [
             "id",
+            "external_id",
             "name",
             "first_day",
             "last_day",
+            "country",
             "location_name",
             "latitude",
             "longitude",
@@ -31,8 +47,8 @@ class CompetitionSerializer(serializers.ModelSerializer):
 
 
 class TravelSerializer(serializers.ModelSerializer):
-    owner = UserSerializer(read_only=True)
-    passengers = UserSerializer(many=True, read_only=True)
+    owner = PublicUserSerializer(read_only=True)
+    passengers = PublicUserSerializer(many=True, read_only=True)
 
     class Meta:
         model = Travel

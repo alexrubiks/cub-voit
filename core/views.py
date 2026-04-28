@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import action, api_view
@@ -11,12 +12,68 @@ from core.models import Competition, Travel, User, Vehicle
 from core.serializers import (
     CompetitionSerializer,
     TravelSerializer,
-    UserSerializer,
+    PublicUserSerializer,
+    CurrentUserSerializer,
     VehicleSerializer,
 )
 
 from .pagination import SmallResultsPagination
 from .permissions import IsOwner, IsOwnerOrAllowedOrSelfPassenger, IsSelf, ReadOnly
+
+import requests
+
+URL = "https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/refs/heads/v1/competitions.json"
+
+
+def sync_competitions():
+    response = requests.get(URL)
+    data = response.json()
+
+    for item in data["items"]:
+        if item["isCanceled"]:
+            continue
+        try:
+            Competition.objects.update_or_create(
+                external_id=item["id"],
+                defaults={
+                    "name": item["name"],
+
+                    "first_day": item["date"]["from"],
+                    "last_day": item["date"]["till"],
+
+                    "country": item["country"],
+                    "location_name": item["city"],
+                    "latitude": item["venue"]["coordinates"]["latitude"],
+                    "longitude": item["venue"]["coordinates"]["longitude"],
+                },
+            )
+        except Exception as e:
+            print(f"Erreur sur {item.get('name')}: {e}")
+
+
+def search_competitions(request):
+    q = request.GET.get("q", "")
+
+    if len(q) < 2:
+        return JsonResponse([], safe=False)
+
+    results = Competition.objects.filter(
+        name__icontains=q
+    ).order_by("first_day")[:5]
+
+    data = [
+        {
+            "name": c.name,
+            "location": c.location_name,
+            "country": c.country,
+            "date": c.first_day.isoformat(),
+            "latitude": c.latitude,
+            "longitude": c.longitude,
+        }
+        for c in results
+    ]
+
+    return JsonResponse(data, safe=False)
 
 
 @api_view(['POST'])
@@ -34,27 +91,41 @@ def login_view(request):
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-    permission_classes = [IsAuthenticated, IsSelf]
-
     filter_backends = [SearchFilter]
     search_fields = ["pseudo", "wca_id"]
-
     pagination_class = SmallResultsPagination
 
-    def get_queryset(self):
-        user = self.request.user
+    def get_permissions(self):
+        if self.action in ["retrieve", "update", "partial_update", "destroy"]:
+            return [IsAuthenticated(), IsSelf()]
+        return [IsAuthenticated()]
 
+    def get_serializer_class(self):
+        if self.action == "me":
+            return CurrentUserSerializer
+
+        if self.action in ["list", "retrieve"]:
+            return PublicUserSerializer
+
+        if self.action in ["list_whitelist"]:
+            return PublicUserSerializer
+
+        return PublicUserSerializer
+
+    def get_queryset(self):
         if self.action == "list":
             search = self.request.query_params.get("search", "").strip()
-            if search:
-                return User.objects.filter(
-                    Q(pseudo__icontains=search) | Q(wca_id__icontains=search)
-                )
-            return User.objects.none()
+            qs = User.objects.all()
 
-        return User.objects.filter(pk=user.pk)
+            if search:
+                qs = qs.filter(
+                    Q(pseudo__icontains=search) |
+                    Q(wca_id__icontains=search)
+                )
+
+            return qs
+
+        return User.objects.all()
     
     def create(self, request, *args, **kwargs):
         return Response({"detail": "Creation not allowed via this endpoint."}, status=405)
@@ -112,7 +183,7 @@ class CompetitionViewSet(viewsets.ModelViewSet):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
 
-    permission_classes = [IsAuthenticated, ReadOnly]
+    permission_classes = [ReadOnly] # [IsAuthenticated, ReadOnly]
     filter_backends = [SearchFilter]
     search_fields = ["name", "location_name"]
 
@@ -178,5 +249,5 @@ class TravelViewSet(viewsets.ModelViewSet):
     def list_passengers(self, request, pk=None):
         travel = self.get_object()
         passengers = travel.passengers.all()
-        serializer = UserSerializer(passengers, many=True)
+        serializer = PublicUserSerializer(passengers, many=True)
         return Response(serializer.data)

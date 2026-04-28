@@ -11,6 +11,7 @@ from core.views import (
     UserViewSet,
     VehicleViewSet,
     login_view,
+    search_competitions,
 )
 
 router = DefaultRouter()
@@ -24,4 +25,5 @@ urlpatterns = [
     path('login/', login_view),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path("competitions-search/", search_competitions),
 ]
