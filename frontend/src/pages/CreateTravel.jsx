@@ -27,7 +27,7 @@ function CreateTravel() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (query.length >= 2) {
-        fetch(`http://127.0.0.1:8000/api/competitions-search/?q=${query}`)
+        fetch(`http://localhost:8000/api/competitions-search/?q=${query}`)
           .then((res) => res.json())
           .then(setResults);
       }

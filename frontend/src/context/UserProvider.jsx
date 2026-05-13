@@ -6,8 +6,9 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch("http://127.0.0.1:8000/api/users/me/", {
+      const res = await fetch("http://localhost:8000/api/users/me/", {
         headers: {
+          credentials: "include",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });

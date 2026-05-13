@@ -3,12 +3,16 @@ from rest_framework import serializers
 
 
 class PublicUserSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField(use_url=True)
+
     class Meta:
         model = User
-        fields = ["id", "pseudo", "wca_id"]
+        fields = ["id", "pseudo", "wca_id", "avatar"]
 
 
 class CurrentUserSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField(use_url=True)
+
     class Meta:
         model = User
         fields = [
@@ -19,6 +23,7 @@ class CurrentUserSerializer(serializers.ModelSerializer):
             "location_name",
             "location_latitude",
             "location_longitude",
+            "avatar",
         ]
 
 

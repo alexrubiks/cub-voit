@@ -6,10 +6,12 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     wca_id = models.CharField(max_length=10, unique=True, blank=True, db_index=True)
     pseudo = models.CharField(max_length=25, db_index=True)
+    email = models.EmailField(max_length=100, blank=True, null=True)
+    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
 
     location_name = models.CharField(max_length=100)
-    location_latitude = models.FloatField()
-    location_longitude = models.FloatField()
+    location_latitude = models.FloatField(blank=True, null=True)
+    location_longitude = models.FloatField(blank=True, null=True)
 
     allowed_users = models.ManyToManyField(
         "self",

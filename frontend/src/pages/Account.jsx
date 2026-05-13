@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { ChevronRight, Edit2, User, Lock, Bell, HelpCircle, MessageCircle, FileText, Shield, LogOut } from "lucide-react";
+import { useContext, useRef } from "react";
+import { ChevronRight, Edit2, User, Lock, Bell, HelpCircle, MessageCircle, FileText, Shield, LogOut, Camera } from "lucide-react";
 import { UserContext } from "../context/UserContext";
 
 const iconColors = {
@@ -59,15 +59,32 @@ function MenuRow({ item }) {
 }
 
 export default function Account() {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
+
+  const fileInputRef = useRef(null);
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    const res = await fetch("http://localhost:8000/api/users/avatar/", {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      body: formData,
+    });
+
+    const data = await res.json();
+    setUser(data);  // met à jour le contexte avec le nouvel avatar
+  };
 
   if (!user) return <p>Chargement...</p>;
 
-  const initials = (user.first_name?.[0] ?? "") + (user.last_name?.[0] ?? "");
-
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero */}
+      {/* User */}
       <div className="px-5 pt-10 pb-8 flex flex-col items-center gap-2.5 relative">
         <button
           className="absolute top-4 right-4 flex items-center gap-1.5 text-gray-400 text-sm hover:text-gray-600 transition-colors"
@@ -75,16 +92,32 @@ export default function Account() {
         >
           <Edit2 size={14} /> Modifier
         </button>
+        
+        {/* input caché, déclenché par le clic sur l'avatar */}
+        <input
+          type="file"
+          accept="image/*"
+          className="hidden"
+          ref={fileInputRef}
+          onChange={handleAvatarChange}
+        />
 
-        <div className="w-[72px] h-[72px] rounded-full bg-emerald-50 border-2 border-emerald-100 flex items-center justify-center text-emerald-700 text-2xl font-medium overflow-hidden">
+        <div
+          className="w-[72px] h-[72px] rounded-full bg-emerald-50 border-2 border-emerald-100 flex items-center justify-center text-emerald-700 text-xl font-medium overflow-hidden cursor-pointer relative group"
+          onClick={() => fileInputRef.current.click()}
+        >
           {user.avatar
             ? <img src={user.avatar} className="w-full h-full object-cover" alt="" />
-            : initials
+            : user.pseudo?.[0] ?? ""
           }
+          {/* overlay au hover pour signaler que c'est cliquable */}
+          <div className="absolute inset-0 bg-black/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <Camera size={18} className="text-white" />
+          </div>
         </div>
 
         <div className="text-center">
-          <p className="text-gray-900 text-lg font-medium">{user.first_name} {user.last_name}</p>
+          <p className="text-gray-900 text-lg font-medium">{user.pseudo}</p>
           <p className="text-gray-400 text-sm">{user.email}</p>
         </div>
       </div>

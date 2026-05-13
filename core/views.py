@@ -7,6 +7,8 @@ from rest_framework.decorators import action, api_view
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
+from rest_framework.views import APIView
 
 from core.models import Competition, Travel, User, Vehicle
 from core.serializers import (
@@ -88,6 +90,18 @@ def login_view(request):
         return Response({"detail": "Login successful"})
     return Response({"detail": "Invalid credentials"}, status=400)
 
+
+class UpdateAvatarView(APIView):
+    parser_classes = [MultiPartParser]  # obligatoire pour les fichiers
+
+    def patch(self, request):
+        user = request.user
+        serializer = CurrentUserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+    
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()

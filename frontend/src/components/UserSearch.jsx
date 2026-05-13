@@ -7,7 +7,7 @@ export default function UserSearch() {
   const handleSearch = async () => {
     if (!query) return;
 
-    const res = await fetch(`http://127.0.0.1:8000/api/users/?search=${query}`, {
+    const res = await fetch(`http://localhost:8000/api/users/?search=${query}`, {
       credentials: 'include'
     });
     const data = await res.json();

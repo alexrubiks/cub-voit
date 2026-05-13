@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+from corsheaders.defaults import default_headers
 from pathlib import Path
 from dotenv import load_dotenv
 import os
@@ -17,6 +18,9 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG") == "True"
@@ -105,6 +109,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "credentials",
+]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",

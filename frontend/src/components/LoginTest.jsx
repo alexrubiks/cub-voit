@@ -9,7 +9,7 @@ export default function LoginTest() {
   const handleLogin = async () => {
     try {
       // 1️⃣ Login et récupération du token
-      const loginRes = await fetch("http://127.0.0.1:8000/api/token/", {
+      const loginRes = await fetch("http://localhost:8000/api/token/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -25,7 +25,7 @@ export default function LoginTest() {
       const accessToken = loginData.access;
 
       // 2️⃣ Récupérer les travels avec JWT
-      const travelsRes = await fetch("http://127.0.0.1:8000/api/travels/", {
+      const travelsRes = await fetch("http://localhost:8000/api/travels/", {
         headers: {
           "Authorization": `Bearer ${accessToken}`,
         },
