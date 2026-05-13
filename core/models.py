@@ -19,8 +19,6 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.pseudo
-    
-    REQUIRED_FIELDS = ['wca_id', 'pseudo'] # uniquement pour createsuperuser
 
 
 class Vehicle(models.Model):
