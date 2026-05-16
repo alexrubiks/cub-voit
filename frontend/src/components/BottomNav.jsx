@@ -3,7 +3,7 @@ import { Plus, Route, Map, User } from "lucide-react";
 
 const tabs = [
   { label: "Créer", icon: Plus, path: "/create" },
-  { label: "Voyages", icon: Route, path: "/travels" },
+  { label: "Trajets", icon: Route, path: "/travels" },
   { label: "Carte", icon: Map, path: "/" },
   { label: "Compte", icon: User, path: "/account" },
 ];

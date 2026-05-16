@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
-    wca_id = models.CharField(max_length=10, unique=True, blank=True, db_index=True)
+    wca_id = models.CharField(max_length=10, blank=True, null=True, db_index=True)
     pseudo = models.CharField(max_length=25, db_index=True)
     email = models.EmailField(max_length=100, blank=True, null=True)
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
@@ -53,16 +53,16 @@ class Travel(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     date = models.DateField(null=False)
-    start_location_name = models.CharField(max_length=100)
+    start_location_name = models.CharField(null=False, max_length=100)
     start_latitude = models.FloatField(null=False)
     start_longitude = models.FloatField(null=False)
 
-    end_location_name = models.CharField(max_length=100)
+    end_location_name = models.CharField(null=False, max_length=100)
     end_latitude = models.FloatField(null=False)
     end_longitude = models.FloatField(null=False)
 
-    competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+    competition = models.ForeignKey(Competition, on_delete=models.CASCADE, null=False)
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, null=False)
     passengers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         symmetrical=False,

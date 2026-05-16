@@ -54,6 +54,18 @@ class CompetitionSerializer(serializers.ModelSerializer):
 class TravelSerializer(serializers.ModelSerializer):
     owner = PublicUserSerializer(read_only=True)
     passengers = PublicUserSerializer(many=True, read_only=True)
+    vehicle = VehicleSerializer(read_only=True)
+    vehicle_id = serializers.PrimaryKeyRelatedField(
+        queryset=Vehicle.objects.all(),
+        source="vehicle",
+        write_only=True
+    )
+    competition = CompetitionSerializer(read_only=True)
+    competition_id = serializers.PrimaryKeyRelatedField(
+        queryset=Competition.objects.all(),
+        source="competition",
+        write_only=True
+    )
 
     class Meta:
         model = Travel
@@ -69,6 +81,8 @@ class TravelSerializer(serializers.ModelSerializer):
             "end_latitude",
             "end_longitude",
             "competition",
+            "competition_id",
+            "vehicle",
             "vehicle_id",
             "passengers",
         ]

@@ -1,39 +1,56 @@
+from datetime import date
+
+import requests
+from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
+from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
 
 from core.models import Competition, Travel, User, Vehicle
 from core.serializers import (
     CompetitionSerializer,
-    TravelSerializer,
-    PublicUserSerializer,
     CurrentUserSerializer,
+    PublicUserSerializer,
+    TravelSerializer,
     VehicleSerializer,
 )
 
 from .pagination import SmallResultsPagination
 from .permissions import IsOwner, IsOwnerOrAllowedOrSelfPassenger, IsSelf, ReadOnly
 
-import requests
-
 URL = "https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/refs/heads/v1/competitions.json"
 
 
-def sync_competitions():
+@staff_member_required
+def sync_competitions(request):
     response = requests.get(URL)
     data = response.json()
+    count = 0
 
     for item in data["items"]:
         if item["isCanceled"]:
             continue
+
+        last_day = date.fromisoformat(item["date"]["till"])
+        if last_day < date.today():
+            continue
         try:
+            venue = item.get("venue", {})
+            coords = venue.get("coordinates", {})
+            lat = coords.get("latitude")
+            lng = coords.get("longitude")
+
+            if lat is None or lng is None:
+                print(f"Coordonnées manquantes pour {item.get('name')}, ignoré")
+                continue
+            
             Competition.objects.update_or_create(
                 external_id=item["id"],
                 defaults={
@@ -48,8 +65,11 @@ def sync_competitions():
                     "longitude": item["venue"]["coordinates"]["longitude"],
                 },
             )
+            count += 1
         except Exception as e:
             print(f"Erreur sur {item.get('name')}: {e}")
+    
+    return JsonResponse({"synced": count})
 
 
 def search_competitions(request):
@@ -64,6 +84,7 @@ def search_competitions(request):
 
     data = [
         {
+            "id": c.id,
             "name": c.name,
             "location": c.location_name,
             "country": c.country,

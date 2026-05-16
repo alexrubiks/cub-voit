@@ -1,186 +1,371 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { Search, Plus, X, Car, ChevronDown, Calendar } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
+// ─── Modale création véhicule ───────────────────────────────────────────────
+function VehicleModal({ onClose, onCreated }) {
+  const [name, setName] = useState("");
+  const [seats, setSeats] = useState(2);
+  const [error, setError] = useState(null);
 
-function CreateTravel() {
-  const [form, setForm] = useState({
-    name: "",
-    owner: "",
-
-    date: "",
-    start_location_name: "", // récupérer champ de l'user
-    start_latitude: "",
-    start_longitude: "",
-
-    end_location_name: "",
-    end_latitude: "",
-    end_longitude: "",
-
-    competition: "",
-    vehicle: "",
-    passengers: [],
-  });
-
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [isFocused, setIsFocused] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (query.length >= 2) {
-        fetch(`http://localhost:8000/api/competitions-search/?q=${query}`)
-          .then((res) => res.json())
-          .then(setResults);
-      }
-    }, 300);
-
-    return () => clearTimeout(timeout);
-  }, [query]);
-
-  
-  const handleChange = (field, value) => {
-    setForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  const handleSubmit = async () => {
+    if (!name || !seats) { setError("Tous les champs sont requis"); return; }
+    const res = await fetch("http://localhost:8000/api/vehicles/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ name, seats: parseInt(seats) }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      onCreated(data);
+      onClose();
+    } else {
+      setError("Erreur lors de la création");
+    }
   };
 
   return (
-    <div className="p-4 space-y-4">
-      <h1 className="text-3xl text-black font-bold">Créer un trajet</h1>
-
-      {/* Nom */}
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => {
-          // petit délai pour permettre le clic sur une option
-          setTimeout(() => setIsFocused(false), 100);
-        }}
-        className="w-full p-2 border rounded"
-      />
-
-      {isFocused && (
-      <div className="mt-2 bg-white border rounded shadow absolute w-full z-10">
-        {results.map((c, i) => (
-          <div
-            key={i}
-            className="p-2 hover:bg-gray-100 cursor-pointer"
-            onClick={() => {
-              setQuery(c.name);
-              setResults([]);
-              setIsFocused(false);
-              
-              handleChange("end_location_name", c.location);
-              handleChange("end_latitude", c.end_latitude);
-              handleChange("end_longitude", c.end_longitude);
-            }}
-          >
-            <div className="font-medium">{c.name}</div>
-            <div className="text-sm text-gray-500">
-              {c.location}
+    <div className="fixed inset-0 bg-black/40 z-50 flex items-end justify-center">
+      <div className="bg-gray-50 w-full max-w-lg rounded-t-2xl p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-medium text-gray-900">Nouveau véhicule</h2>
+          <button onClick={onClose}><X size={20} className="text-gray-400" /></button>
+        </div>
+        <div className="space-y-3">
+          <div className="flex gap-3">
+            <div className="flex-1">
+              <label className="text-xs text-gray-500 mb-1 block">Nom du véhicule</label>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Ex: Peugeot 308"
+                className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-indigo-300 bg-white"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-gray-500 mb-1 block">Places</label>
+              <div className="flex items-center border border-gray-300 rounded-xl overflow-hidden bg-white">
+                <button
+                  onClick={() => setSeats(Math.max(1, parseInt(seats || 1) - 1))}
+                  className="px-3 py-2.5 text-gray-500 hover:bg-gray-50 transition"
+                >−</button>
+                <span className="w-6 text-center text-sm text-gray-900">{seats}</span>
+                <button
+                  onClick={() => setSeats(parseInt(seats || 0) + 1)}
+                  className="px-3 py-2.5 text-gray-500 hover:bg-gray-50 transition"
+                >+</button>
+              </div>
             </div>
           </div>
-        ))}
+          {error && <p className="text-xs text-red-500">{error}</p>}
+        </div>
+        <button
+          onClick={handleSubmit}
+          className="w-full bg-indigo-600 text-white rounded-xl py-3 text-sm font-medium hover:bg-indigo-700 transition"
+        >
+          Créer le véhicule
+        </button>
       </div>
-    )}
+    </div>
+  );
+}
 
-      {/* Destination */}
-      <input
-        placeholder="Destination"
-        className="w-full p-2 border rounded-lg"
-        value={form.end_location_name}
-        onChange={(e) =>
-          handleChange("end_location_name", e.target.value)
-        }
-      />
-      
-      {/* Départ */}
-      <input
-        placeholder="Lieu de départ"
-        className="w-full p-2 border rounded-lg"
-        value={form.start_location_name}
-        onChange={(e) =>
-          handleChange("start_location_name", e.target.value)
-        }
-      />
+// ─── Page principale ────────────────────────────────────────────────────────
+function CreateTravel() {
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
 
-      {/* Date (forme à revoir, 3 boutons à sélectionner "le jour même", "la veille", "personnalisé") */}
-      <input
-        type="date"
-        className="w-full p-2 border rounded-lg"
-        value={form.date}
-        onChange={(e) => handleChange("date", e.target.value)}
-      />
+  const [form, setForm] = useState({
+    name: "",
+    date: "",
+    start_location_name: user?.location_name ?? "",
+    start_latitude: user?.location_latitude ?? "",
+    start_longitude: user?.location_longitude ?? "",
+    end_location_name: "",
+    end_latitude: "",
+    end_longitude: "",
+    competition_id: "",
+    vehicle_id: "",
+  });
 
-      {/* Véhicule */}
-      <input
-        placeholder="Véhicule"
-        className="w-full p-2 border rounded-lg"
-        value={form.vehicle}
-        onChange={(e) => handleChange("vehicle", e.target.value)}
-      />
+  const [dateMode, setDateMode] = useState(null); // "same" | "before" | "custom"
+  const [competitionQuery, setCompetitionQuery] = useState("");
+  const [competitionResults, setCompetitionResults] = useState([]);
+  const [competitionFocused, setCompetitionFocused] = useState(false);
+  const [selectedCompetition, setSelectedCompetition] = useState(null);
 
-      {/* Passagers */}
-      <input
-        placeholder="Ajouter un passager"
-        className="w-full p-2 border rounded-lg"
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && e.target.value) {
-            handleChange("passengers", [
-              ...form.passengers,
-              e.target.value,
-            ]);
-            e.target.value = "";
-          }
-        }}
-      />
+  const [vehicles, setVehicles] = useState([]);
+  const [showVehicleModal, setShowVehicleModal] = useState(false);
 
-      <div className="space-y-2">
-        {form.passengers.map((p, i) => (
-          <div
-            key={i}
-            className="p-2 bg-gray-100 rounded-lg text-sm"
-          >
-            {p}
+  const [error, setError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Chargement des véhicules
+  useEffect(() => {
+    fetch("http://localhost:8000/api/vehicles/", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    })
+      .then((res) => res.json())
+      .then(setVehicles);
+  }, []);
+
+  // Autocomplete compétitions
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (competitionQuery.length >= 2) {
+        fetch(`http://localhost:8000/api/competitions-search/?q=${competitionQuery}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        })
+          .then((res) => res.json())
+          .then(setCompetitionResults);
+      } else {
+        setCompetitionResults([]);
+      }
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [competitionQuery]);
+
+  const handleChange = (field, value) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const selectCompetition = (c) => {
+    setSelectedCompetition(c);
+    setCompetitionQuery(c.name);
+    setCompetitionFocused(false);
+    setCompetitionResults([]);
+    handleChange("competition_id", c.id);
+    handleChange("end_location_name", c.location);
+    handleChange("end_latitude", c.latitude);
+    handleChange("end_longitude", c.longitude);
+
+    // Calcul de la date selon le mode sélectionné
+    if (dateMode === "same") {
+      handleChange("date", c.date);
+    } else if (dateMode === "before") {
+      const d = new Date(c.date + "T00:00:00Z");
+      d.setUTCDate(d.getDate() - 1);
+      handleChange("date", d.toISOString().split("T")[0]);
+    }
+  };
+
+  const handleDateMode = (mode) => {
+    setDateMode(mode);
+    if (!selectedCompetition) return;
+    if (mode === "same") {
+      handleChange("date", selectedCompetition.date);
+    } else if (mode === "before") {
+      const d = new Date(selectedCompetition.date + "T00:00:00Z");
+      d.setUTCDate(d.getDate() - 1);
+      handleChange("date", d.toISOString().split("T")[0]);
+    } else {
+      handleChange("date", "");
+    }
+  };
+
+  const handleVehicleCreated = (vehicle) => {
+    setVehicles((prev) => [...prev, vehicle]);
+    handleChange("vehicle_id", vehicle.id);
+  };
+
+  const handleSubmit = async () => {
+    setError(null);
+    if (!form.competition_id) { setError("Sélectionne une compétition"); return; }
+    if (!form.date) { setError("Choisis une date"); return; }
+    if (!form.vehicle_id) { setError("Sélectionne un véhicule"); return; }
+    if (!form.start_location_name) { setError("Indique un lieu de départ"); return; }
+
+    setSubmitting(true);
+    const res = await fetch("http://localhost:8000/api/travels/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify(form),
+    });
+
+    setSubmitting(false);
+    if (res.ok) {
+      navigate("/travels");
+    } else {
+      const data = await res.json();
+      setError(JSON.stringify(data));
+    }
+  };
+
+  return (
+    <div className="p-4 space-y-5 pb-8">
+      <h1 className="text-3xl text-gray-900 font-bold">Créer un trajet</h1>
+
+      {/* ── Compétition ── */}
+      <div>
+        <label className="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Compétition</label>
+        <div className="relative">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2">
+            <Search size={16} className="text-gray-400" />
           </div>
-        ))}
+          <input
+            value={competitionQuery}
+            onChange={(e) => { setCompetitionQuery(e.target.value); setSelectedCompetition(null); }}
+            onFocus={() => setCompetitionFocused(true)}
+            onBlur={() => setTimeout(() => setCompetitionFocused(false), 150)}
+            placeholder="Rechercher une compétition..."
+            className="w-full pl-9 pr-3 py-2.5 bg-white border border-gray-300 rounded-xl text-sm text-gray-900 focus:outline-none focus:border-indigo-300"
+          />
+          {competitionFocused && competitionResults.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-100 rounded-xl shadow-md z-10 overflow-hidden">
+              
+              {competitionResults.map((c) => (
+                <div
+                  key={c.id}
+                  onMouseDown={() => selectCompetition(c)}
+                  className="px-4 py-3 hover:bg-indigo-50 cursor-pointer border-b border-gray-50 last:border-none"
+                >
+                  <p className="text-sm font-medium text-gray-900">{c.name}</p>
+                  <p className="text-xs text-gray-400">{c.location}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      <button className="w-full bg-blue-600 text-white p-3 rounded-lg">
-        Créer
+      {/* ── Date ── */}
+      <div>
+        <label className="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Date de départ</label>
+        <div className="flex gap-2 mb-2">
+          {[
+            { key: "same", label: "Jour J", date: selectedCompetition?.date },
+            { key: "before", label: "Veille", date: selectedCompetition ? (() => { const d = new Date(selectedCompetition.date + "T00:00:00Z"); d.setUTCDate(d.getDate() - 1); return d.toISOString().split("T")[0]; })() : null },
+            { key: "custom", label: "custom" },
+          ].map(({ key, label, date }) => {
+            const active = dateMode === key;
+            const day = date ? new Date(date + "T00:00:00Z").getDate() : null;
+            const month = date ? new Date(date + "T00:00:00Z").toLocaleString("fr-FR", { month: "short" }) : null;
+
+            return (
+              <button
+                key={key}
+                onClick={() => handleDateMode(key)}
+                className={`flex-1 aspect-square flex flex-col items-center justify-center rounded-xl border transition ${
+                  active ? "bg-indigo-600 border-indigo-600" : "bg-white border-gray-300 hover:border-indigo-300"
+                }`}
+              >
+                {key === "custom" ? (
+                  <>
+                    <Calendar size={26} className={active ? "text-white" : "text-gray-400"} />
+                    <span className={`text-sm mt-1 ${active ? "text-white" : "text-gray-400"}`}>Choisir</span>
+                  </>
+                ) : day ? (
+                  <>
+                    <div className="relative flex flex-col items-center justify-center w-full h-full">
+                      <span className={`absolute top-2 text-[12px] uppercase tracking-widest mb-1 ${active ? "text-white/60" : "text-gray-500"}`}>
+                        {label}
+                      </span>
+                      <span className={`text-4xl font-bold leading-none ${active ? "text-white" : "text-gray-700"}`}>{day}</span>
+                      <span className={`text-base mt-0.5 lowercase ${active ? "text-white/80" : "text-gray-400"}`}>{month}</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span className={`text-base font-bold leading-none ${active ? "text-white" : "text-gray-300"}`}>—</span>
+                    <span className={`text-sm mt-0.5 ${active ? "text-white/60" : "text-gray-300"}`}>{label}</span>
+                  </>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Départ ── */}
+      <div>
+        <label className="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Lieu de départ</label>
+        <input
+          value={form.start_location_name}
+          onChange={(e) => handleChange("start_location_name", e.target.value)}
+          placeholder="Ville de départ"
+          className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-indigo-300 bg-white"
+        />
+        {user?.location_name && form.start_location_name !== user.location_name && (
+          <button
+            onClick={() => {
+              handleChange("start_location_name", user.location_name);
+              handleChange("start_latitude", user.location_latitude);
+              handleChange("start_longitude", user.location_longitude);
+            }}
+            className="text-xs text-indigo-500 mt-1"
+          >
+            Utiliser mon domicile ({user.location_name})
+          </button>
+        )}
+      </div>
+
+      {/* ── Destination (auto-remplie) ── */}
+      {form.end_location_name && (
+        <div>
+          <label className="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Destination</label>
+          <div className="w-full border border-gray-200 bg-gray-50 rounded-xl px-3 py-2.5 text-sm text-gray-500">
+            {form.end_location_name}
+          </div>
+        </div>
+      )}
+
+      {/* ── Véhicule ── */}
+      <div>
+        <label className="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Véhicule</label>
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <Car size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            <select
+              value={form.vehicle_id}
+              onChange={(e) => handleChange("vehicle_id", e.target.value)}
+              className="w-full appearance-none pl-9 pr-8 py-2.5 bg-white border border-gray-300 rounded-xl text-sm focus:outline-none focus:border-indigo-300 text-gray-900"
+            >
+              <option value="">Sélectionner...</option>
+              {vehicles.map((v) => (
+                <option key={v.id} value={v.id}>
+                  {v.name} · {v.seats} places
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            onClick={() => setShowVehicleModal(true)}
+            className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center hover:bg-indigo-100 transition flex-shrink-0"
+          >
+            <Plus size={18} className="text-indigo-600" />
+          </button>
+        </div>
+      </div>
+
+      {/* ── Erreur ── */}
+      {error && <p className="text-sm text-red-500">{error}</p>}
+
+      {/* ── Soumettre ── */}
+      <button
+        onClick={handleSubmit}
+        disabled={submitting}
+        className="w-full bg-indigo-600 text-white rounded-xl py-3 text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50"
+      >
+        {submitting ? "Création..." : "Créer le trajet"}
       </button>
+
+      {/* ── Modale véhicule ── */}
+      {showVehicleModal && (
+        <VehicleModal
+          onClose={() => setShowVehicleModal(false)}
+          onCreated={handleVehicleCreated}
+        />
+      )}
     </div>
   );
 }
 
 export default CreateTravel;
-
-
-// [owner] ajouté automatiquement
-
-// interface de recherche pour [competition]
-// [name] -- à retirer dans la structure potentiellement
-// [end_location_name]
-// [end_latitude]
-// [end_longitude]
-
-
-// champ pour sélectionner le départ
-// [start_location_name]
-// [start_latitude]
-// [start_longitude]
-
-// champ pour sélectionner la date
-// [date]
-
-// champ pour sélectionner le véhicule
-// [vehicle]
-// possibilité de créer un nouveau véhicule
-
-// champ pour ajouter des passagers
-// [passengers]
-// liste comme pour les vrais trajets avec case grisée d'ajout
-
-// champ pour spécifier si le trajet est public/restreint
-// ajouter champ dans la bdd
