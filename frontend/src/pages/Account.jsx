@@ -141,7 +141,7 @@ export default function Account() {
       <div className="px-4 pt-6 pb-8 flex flex-col gap-5">
         {menuGroups.map((group) => (
           <div key={group.title}>
-            <p className="text-[14px] uppercase tracking-widest text-gray-400 mb-2 px-1">
+            <p className="text-sm uppercase tracking-widest text-gray-400 mb-2 px-1">
               {group.title}
             </p>
             <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">

@@ -204,7 +204,7 @@ function CreateTravel() {
 
       {/* ── Compétition ── */}
       <div>
-        <label className="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Compétition</label>
+        <label className="text-sm uppercase tracking-widest text-gray-400 mb-2 block">Compétition</label>
         <div className="relative">
           <div className="absolute left-3 top-1/2 -translate-y-1/2">
             <Search size={16} className="text-gray-400" />
@@ -237,7 +237,7 @@ function CreateTravel() {
 
       {/* ── Date ── */}
       <div>
-        <label className="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Date de départ</label>
+        <label className="text-sm uppercase tracking-widest text-gray-400 mb-2 block">Date de départ</label>
         <div className="flex gap-2 mb-2">
           {[
             { key: "same", label: "Jour J", date: selectedCompetition?.date },
@@ -267,8 +267,8 @@ function CreateTravel() {
                       <span className={`absolute top-2 text-[12px] uppercase tracking-widest mb-1 ${active ? "text-white/60" : "text-gray-500"}`}>
                         {label}
                       </span>
-                      <span className={`text-4xl font-bold leading-none ${active ? "text-white" : "text-gray-700"}`}>{day}</span>
-                      <span className={`text-base mt-0.5 lowercase ${active ? "text-white/80" : "text-gray-400"}`}>{month}</span>
+                      <span className={`text-4xl font-bold leading-none ${active ? "text-white" : "text-indigo-600"}`}>{day}</span>
+                      <span className={`text-base mt-0.5 lowercase ${active ? "text-white/80" : "text-indigo-600"}`}>{month}</span>
                     </div>
                   </>
                 ) : (
@@ -285,7 +285,7 @@ function CreateTravel() {
 
       {/* ── Départ ── */}
       <div>
-        <label className="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Lieu de départ</label>
+        <label className="text-sm uppercase tracking-widest text-gray-400 mb-2 block">Lieu de départ</label>
         <input
           value={form.start_location_name}
           onChange={(e) => handleChange("start_location_name", e.target.value)}
@@ -309,7 +309,7 @@ function CreateTravel() {
       {/* ── Destination (auto-remplie) ── */}
       {form.end_location_name && (
         <div>
-          <label className="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Destination</label>
+          <label className="text-sm uppercase tracking-widest text-gray-400 mb-2 block">Destination</label>
           <div className="w-full border border-gray-200 bg-gray-50 rounded-xl px-3 py-2.5 text-sm text-gray-500">
             {form.end_location_name}
           </div>
@@ -318,7 +318,7 @@ function CreateTravel() {
 
       {/* ── Véhicule ── */}
       <div>
-        <label className="text-xs uppercase tracking-widest text-gray-400 mb-2 block">Véhicule</label>
+        <label className="text-sm uppercase tracking-widest text-gray-400 mb-2 block">Véhicule</label>
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Car size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
