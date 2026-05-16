@@ -3,25 +3,30 @@ import { UserContext } from "./UserContext";
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch("http://localhost:8000/api/users/me/", {
-        headers: {
-          credentials: "include",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const token = localStorage.getItem("token");
+      if (!token) { setLoading(false); return; }
 
-      const data = await res.json();
-      setUser(data);
+      try {
+        const res = await fetch("http://localhost:8000/api/users/me/", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data);
+        }
+      } finally {
+        setLoading(false);
+      }
     };
-
     fetchUser();
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, loading }}>
       {children}
     </UserContext.Provider>
   );

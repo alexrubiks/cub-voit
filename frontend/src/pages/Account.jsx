@@ -1,6 +1,7 @@
 import { useContext, useRef } from "react";
 import { ChevronRight, Edit2, User, Lock, Bell, HelpCircle, MessageCircle, FileText, Shield, LogOut, Camera } from "lucide-react";
 import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const iconColors = {
   teal: "bg-emerald-50 text-emerald-700",
@@ -41,43 +42,55 @@ function MenuRow({ item }) {
       href={item.href}
       className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-none"
     >
-      <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${iconColors[item.color]}`}>
+      <span className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${iconColors[item.color]}`}>
         <Icon size={17} />
       </span>
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-gray-900">{item.label}</p>
-        {item.sub && <p className="text-xs text-gray-400 mt-0.5">{item.sub}</p>}
+        <p className="text-base text-gray-900">{item.label}</p>
+        {item.sub && <p className="text-sm text-gray-400 mt-0.5">{item.sub}</p>}
       </div>
       {item.badge && (
-        <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
+        <span className="text-sm bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
           {item.badge}
         </span>
       )}
-      <ChevronRight size={16} className="text-gray-300 flex-shrink-0" />
+      <ChevronRight size={18} className="text-gray-500 flex-shrink-0" />
     </a>
   );
 }
 
 export default function Account() {
   const { user, setUser } = useContext(UserContext);
-
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleAvatarChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    const token = localStorage.getItem("token");
+    console.log("token:", token);
+
     const formData = new FormData();
     formData.append("avatar", file);
 
-    const res = await fetch("http://localhost:8000/api/users/avatar/", {
+    const res = await fetch("http://localhost:8000/api/upload-avatar/", {
       method: "PATCH",
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       body: formData,
     });
 
+    console.log("status:", res.status);  // 👈 quel code ?
     const data = await res.json();
-    setUser(data);  // met à jour le contexte avec le nouvel avatar
+    console.log("response:", data);  // 👈 que contient la réponse ?
+    setUser(data);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    setUser(null);
+    navigate("/login");
   };
 
   if (!user) return <p>Chargement...</p>;
@@ -103,11 +116,15 @@ export default function Account() {
         />
 
         <div
-          className="w-[72px] h-[72px] rounded-full bg-emerald-50 border-2 border-emerald-100 flex items-center justify-center text-emerald-700 text-xl font-medium overflow-hidden cursor-pointer relative group"
+          className="w-[120px] h-[120px] rounded-full bg-emerald-50 border-2 border-emerald-300 flex items-center justify-center text-emerald-700 text-4xl font-medium overflow-hidden cursor-pointer relative group"
           onClick={() => fileInputRef.current.click()}
         >
           {user.avatar
-            ? <img src={user.avatar} className="w-full h-full object-cover" alt="" />
+            ? <img 
+                src={`http://localhost:8000${user.avatar}`}
+                className="w-full h-full object-cover"
+                alt=""
+              />
             : user.pseudo?.[0] ?? ""
           }
           {/* overlay au hover pour signaler que c'est cliquable */}
@@ -117,7 +134,7 @@ export default function Account() {
         </div>
 
         <div className="text-center">
-          <p className="text-gray-900 text-lg font-medium">{user.pseudo}</p>
+          <p className="text-gray-900 text-2xl font-bold">{user.pseudo}</p>
           <p className="text-gray-400 text-sm">{user.email}</p>
         </div>
       </div>
@@ -126,7 +143,7 @@ export default function Account() {
       <div className="px-4 pt-6 pb-8 flex flex-col gap-5">
         {menuGroups.map((group) => (
           <div key={group.title}>
-            <p className="text-[11px] uppercase tracking-widest text-gray-400 mb-2 px-1">
+            <p className="text-[14px] uppercase tracking-widest text-gray-400 mb-2 px-1">
               {group.title}
             </p>
             <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
@@ -140,7 +157,7 @@ export default function Account() {
         {/* Déconnexion */}
         <button
           className="w-full flex items-center justify-center gap-2 py-3 bg-white rounded-xl border border-gray-100 text-red-500 text-sm"
-          onClick={() => {/* logout logic */}}
+          onClick={() => {handleLogout}}
         >
           <LogOut size={16} /> Se déconnecter
         </button>

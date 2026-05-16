@@ -11,9 +11,8 @@ export default function Login() {
     e.preventDefault();
     const form = e.target;
 
-    const res = await fetch("http://localhost:8000/api/login/", {
+    const res = await fetch("http://localhost:8000/api/token/", {
       method: "POST",
-      credentials: "include",  // indispensable pour les sessions Django
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         username: form.username.value,
@@ -22,9 +21,12 @@ export default function Login() {
     });
 
     if (res.ok) {
-      // on recharge les infos utilisateur depuis /me/
+      const { access, refresh } = await res.json();
+      localStorage.setItem("token", access);
+      localStorage.setItem("refreshToken", refresh);
+
       const meRes = await fetch("http://localhost:8000/api/users/me/", {
-        credentials: "include",
+        headers: { Authorization: `Bearer ${access}` },
       });
       const data = await meRes.json();
       setUser(data);

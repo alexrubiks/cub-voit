@@ -1,9 +1,8 @@
-from django.contrib.auth import authenticate, login
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -78,21 +77,9 @@ def search_competitions(request):
     return JsonResponse(data, safe=False)
 
 
-@api_view(['POST'])
-def login_view(request):
-    username = request.data.get("username")
-    password = request.data.get("password")
-
-    user = authenticate(username=username, password=password)
-
-    if user is not None:
-        login(request, user)
-        return Response({"detail": "Login successful"})
-    return Response({"detail": "Invalid credentials"}, status=400)
-
-
 class UpdateAvatarView(APIView):
     parser_classes = [MultiPartParser]  # obligatoire pour les fichiers
+    permission_classes = [IsAuthenticated]
 
     def patch(self, request):
         user = request.user
