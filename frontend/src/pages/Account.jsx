@@ -4,7 +4,7 @@ import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 
 const iconColors = {
-  teal: "bg-emerald-50 text-emerald-700",
+  indigo: "bg-indigo-50 text-indigo-700",
   blue: "bg-blue-50 text-blue-700",
   amber: "bg-amber-50 text-amber-700",
   gray: "bg-gray-100 text-gray-500",
@@ -14,8 +14,8 @@ const menuGroups = [
   {
     title: "Mon compte",
     items: [
-      { icon: User, label: "Informations personnelles", sub: "Nom, adresse, téléphone", color: "teal", href: "/account/profile" },
-      { icon: Lock, label: "Sécurité", sub: "Mot de passe, 2FA", color: "teal", href: "/account/security" },
+      { icon: User, label: "Informations personnelles", sub: "Nom, adresse, téléphone", color: "indigo", href: "/account/profile" },
+      { icon: Lock, label: "Sécurité", sub: "Mot de passe, 2FA", color: "indigo", href: "/account/security" },
       { icon: Bell, label: "Notifications", badge: "3 actives", color: "blue", href: "/account/notifications" },
     ],
   },
@@ -50,7 +50,7 @@ function MenuRow({ item }) {
         {item.sub && <p className="text-sm text-gray-400 mt-0.5">{item.sub}</p>}
       </div>
       {item.badge && (
-        <span className="text-sm bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
+        <span className="text-sm bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full font-medium">
           {item.badge}
         </span>
       )}
@@ -80,9 +80,7 @@ export default function Account() {
       body: formData,
     });
 
-    console.log("status:", res.status);  // 👈 quel code ?
     const data = await res.json();
-    console.log("response:", data);  // 👈 que contient la réponse ?
     setUser(data);
   };
 
@@ -94,6 +92,10 @@ export default function Account() {
   };
 
   if (!user) return <p>Chargement...</p>;
+
+  const avatarUrl = user.avatar || null;
+
+  console.log(avatarUrl)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -116,15 +118,11 @@ export default function Account() {
         />
 
         <div
-          className="w-[120px] h-[120px] rounded-full bg-emerald-50 border-2 border-emerald-300 flex items-center justify-center text-emerald-700 text-4xl font-medium overflow-hidden cursor-pointer relative group"
+          className="w-[120px] h-[120px] rounded-full bg-indigo-50 border-2 border-indigo-300 flex items-center justify-center text-indigo-700 text-4xl font-medium overflow-hidden cursor-pointer relative group"
           onClick={() => fileInputRef.current.click()}
         >
-          {user.avatar
-            ? <img 
-                src={`http://localhost:8000${user.avatar}`}
-                className="w-full h-full object-cover"
-                alt=""
-              />
+          {avatarUrl
+            ? <img src={avatarUrl} className="w-full h-full object-cover" alt="" />
             : user.pseudo?.[0] ?? ""
           }
           {/* overlay au hover pour signaler que c'est cliquable */}
@@ -157,7 +155,7 @@ export default function Account() {
         {/* Déconnexion */}
         <button
           className="w-full flex items-center justify-center gap-2 py-3 bg-white rounded-xl border border-gray-100 text-red-500 text-sm"
-          onClick={() => {handleLogout}}
+          onClick={handleLogout}
         >
           <LogOut size={16} /> Se déconnecter
         </button>
