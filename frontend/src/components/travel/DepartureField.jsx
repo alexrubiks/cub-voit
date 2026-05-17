@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { MapPin } from "lucide-react";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../../context/UserContext";
 import MapPickerModal from "./MapPickerModal";
 
 function DepartureField({ value, onChange }) {

@@ -1,5 +1,5 @@
 import { Car, Pencil, User, Users } from "lucide-react";
-import PersonCard from "./PersonCard";
+import PersonCard from "../passengers/PersonCard";
 
 function TravelCard({ travel, detailed, past, onClick }) {
   const day = travel.date ? new Date(travel.date).getDate() : null;

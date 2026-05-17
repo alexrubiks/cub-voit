@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { Search, X, Plus } from "lucide-react";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../../context/UserContext";
 import PassengerRow from "./PassengerRow";
 import Avatar from "./Avatar";
 
