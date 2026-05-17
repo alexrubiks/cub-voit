@@ -125,7 +125,6 @@ export default function Account() {
             ? <img src={avatarUrl} className="w-full h-full object-cover" alt="" />
             : user.pseudo?.[0] ?? ""
           }
-          {/* overlay au hover pour signaler que c'est cliquable */}
           <div className="absolute inset-0 bg-black/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
             <Camera size={18} className="text-white" />
           </div>

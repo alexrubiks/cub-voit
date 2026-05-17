@@ -19,7 +19,6 @@ function Map() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* 🔥 boucle propre */}
         {travels.map((travel) => (
           <TravelRoute
             key={travel.id}
