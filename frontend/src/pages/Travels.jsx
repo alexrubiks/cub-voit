@@ -31,7 +31,7 @@ function Travels() {
 
   const filtered = search.length === 0
     ? travels
-    : travels.filter((t) => t.name.toLowerCase().includes(search.toLowerCase()));
+    : travels.filter((t) => t.competition.name.toLowerCase().includes(search.toLowerCase()));
 
   const upcoming = filtered.filter((t) => !t.date || new Date(t.date) >= now);
   const past = filtered.filter((t) => t.date && new Date(t.date) < now);

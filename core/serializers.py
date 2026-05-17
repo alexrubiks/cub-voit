@@ -54,6 +54,13 @@ class CompetitionSerializer(serializers.ModelSerializer):
 class TravelSerializer(serializers.ModelSerializer):
     owner = PublicUserSerializer(read_only=True)
     passengers = PublicUserSerializer(many=True, read_only=True)
+    passengers_ids = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        source="passengers",
+        write_only=True,
+        many=True,
+        required=False,
+    )
     vehicle = VehicleSerializer(read_only=True)
     vehicle_id = serializers.PrimaryKeyRelatedField(
         queryset=Vehicle.objects.all(),
@@ -84,4 +91,5 @@ class TravelSerializer(serializers.ModelSerializer):
             "vehicle",
             "vehicle_id",
             "passengers",
+            "passengers_ids",
         ]

@@ -4,6 +4,7 @@ import { UserContext } from "../context/UserContext";
 import CompetitionSearch from "../components/CompetitionSearch";
 import DatePicker from "../components/DatePicker";
 import DepartureField from "../components/DepartureField";
+import PassengerSearch from "../components/PassengerSearch";
 import VehicleSelect from "../components/VehicleSelect";
 
 
@@ -22,11 +23,14 @@ function CreateTravel() {
     end_longitude: "",
     competition_id: "",
     vehicle_id: "",
+    passengers: "",
   });
 
   const [selectedCompetition, setSelectedCompetition] = useState(null);
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [passengers, setPassengers] = useState([]);
   
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -46,7 +50,7 @@ function CreateTravel() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, passengers_ids: passengers.map((p) => p.id) }),
     });
 
     setSubmitting(false);
@@ -91,8 +95,20 @@ function CreateTravel() {
 
       <VehicleSelect
         value={form.vehicle_id}
-        onChange={(id) => handleChange("vehicle_id", id)}
+        onChange={(vehicle) => {
+          setSelectedVehicle(vehicle);
+          handleChange("vehicle_id", vehicle.id);
+        }}
       />
+
+      {selectedVehicle && (
+        <PassengerSearch
+          vehicle={selectedVehicle}
+          passengers={passengers}
+          onAdd={(u) => setPassengers((prev) => [...prev, u])}
+          onRemove={(u) => setPassengers((prev) => prev.filter((p) => p.id !== u.id))}
+        />
+      )}
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 

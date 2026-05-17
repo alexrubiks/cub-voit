@@ -24,6 +24,8 @@ function App() {
           <Route path="/travels" element={<Travels />} />
           <Route path="/create" element={<CreateTravel />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/account/profile" element={<AccountProfile />} />
+          <Route path="/account/security" element={<AccountSecurity />} />
         </Route>
       </Routes>
     </UserProvider>

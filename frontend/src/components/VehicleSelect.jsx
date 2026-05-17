@@ -16,7 +16,7 @@ function VehicleSelect({ value, onChange }) {
 
   const handleVehicleCreated = (vehicle) => {
     setVehicles((prev) => [...prev, vehicle]);
-    onChange(vehicle.id);
+    onChange(vehicle);
   };
 
   return (
@@ -30,7 +30,10 @@ function VehicleSelect({ value, onChange }) {
           <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           <select
             value={value}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => {
+              const vehicle = vehicles.find((v) => v.id === parseInt(e.target.value));
+              onChange(vehicle);
+            }}
             className={`w-full appearance-none pl-9 pr-8 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-indigo-300 ${
               value ? "text-gray-900" : "text-gray-400"
             }`}

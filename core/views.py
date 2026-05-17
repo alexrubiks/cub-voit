@@ -223,8 +223,9 @@ class TravelViewSet(viewsets.ModelViewSet):
 
         return Travel.objects.filter(
             Q(owner=user) | 
-            Q(owner__in=user.allowed_by.all())
-        )
+            Q(owner__in=user.allowed_by.all()) |
+            Q(passengers=user)
+        ).distinct()
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
