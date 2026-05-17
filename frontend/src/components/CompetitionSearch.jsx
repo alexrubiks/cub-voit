@@ -5,7 +5,7 @@ function CompetitionSearch({ onSelect }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [focused, setFocused] = useState(false);
-  const [selected, setSelected] = useState(null);
+  const [_, setSelected] = useState(null);
 
   useEffect(() => {
     const timeout = setTimeout(() => {

@@ -49,7 +49,6 @@ class Competition(models.Model):
 
 
 class Travel(models.Model):
-    name = models.CharField(max_length=50, db_index=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     date = models.DateField(null=False)
@@ -70,4 +69,4 @@ class Travel(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return f"{self.start_location_name} → {self.end_location_name}"

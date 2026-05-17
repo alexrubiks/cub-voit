@@ -71,7 +71,6 @@ class TravelSerializer(serializers.ModelSerializer):
         model = Travel
         fields = [
             "id",
-            "name",
             "owner",
             "date",
             "start_location_name",

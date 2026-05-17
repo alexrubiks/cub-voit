@@ -4,7 +4,6 @@ from .models import User, Vehicle, Competition, Travel
 
 class UserAdmin(BaseUserAdmin):
     list_display = ('username', 'email', 'wca_id', 'pseudo', 'is_staff')
-
     fieldsets = BaseUserAdmin.fieldsets + (
         ('Extra Info', {'fields': ('wca_id', 'pseudo')}),
     )
@@ -32,6 +31,6 @@ class CompetitionAdmin(admin.ModelAdmin):
 
 @admin.register(Travel)
 class TravelAdmin(admin.ModelAdmin):
-    list_display = ("name", "owner", "date", "start_location_name", "end_location_name")
-    search_fields = ("name", "date", "start_location_name", "end_location_name")
+    list_display = ("owner", "date", "start_location_name", "end_location_name")
+    search_fields = ("date", "start_location_name", "end_location_name")
     list_filter = ("owner",)

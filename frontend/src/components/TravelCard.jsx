@@ -16,8 +16,8 @@ function TravelCard({ travel, detailed, past, onClick }) {
 
         {/* Gauche : nom + itinéraire */}
         <div className="flex-1 min-w-0">
-          <p className={`font-semibold text-lg leading-tight ${past ? "text-gray-500" : "text-gray-900"}`}>
-            {travel.name}
+          <p className={`font-bold text-xl leading-tight ${past ? "text-gray-500" : "text-gray-900"}`}>
+            {travel.competition.name}
           </p>
           <p className="text-sm text-gray-400 mt-0.5">
             {travel.start_location_name} → {travel.end_location_name}
