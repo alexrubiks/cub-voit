@@ -1,11 +1,12 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
-import CompetitionSearch from "../components/CompetitionSearch";
-import DatePicker from "../components/DatePicker";
-import DepartureField from "../components/DepartureField";
-import PassengerSearch from "../components/PassengerSearch";
-import VehicleSelect from "../components/VehicleSelect";
+import CompetitionSearch from "../components/search/CompetitionSearch";
+import DatePicker from "../components/ui/DatePicker";
+import DepartureField from "../components/ui/DepartureField";
+import PassengerSearch from "../components/passengers/PassengerSearch";
+import VehicleSelect from "../components/vehicle/VehicleSelect";
+import { API_URLS } from "../utils";
 
 
 function CreateTravel() {
@@ -44,7 +45,7 @@ function CreateTravel() {
     if (!form.start_location_name) { setError("Indiquer un lieu de départ"); return; }
 
     setSubmitting(true);
-    const res = await fetch("http://localhost:8000/api/travels/", {
+    const res = await fetch(API_URLS.travels, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

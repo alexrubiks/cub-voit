@@ -2,7 +2,8 @@ import { useState, useEffect, useContext } from "react";
 import { Search, X, Plus } from "lucide-react";
 import { UserContext } from "../../context/UserContext";
 import PassengerRow from "./PassengerRow";
-import Avatar from "./Avatar";
+import Avatar from "../ui/Avatar";
+import { API_URLS } from "../../utils";
 
 function PassengerSearch({ vehicle, passengers, onAdd, onRemove }) {
   const { user } = useContext(UserContext);
@@ -17,7 +18,7 @@ function PassengerSearch({ vehicle, passengers, onAdd, onRemove }) {
   useEffect(() => {
     const timeout = setTimeout(async () => {
       if (query.length >= 2) {
-        const res = await fetch(`http://localhost:8000/api/users/?search=${query}`, {
+        const res = await fetch(`${API_URLS.users}?search=${query}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         const data = await res.json();

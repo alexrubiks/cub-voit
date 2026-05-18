@@ -1,7 +1,7 @@
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import { ChevronRight, Edit2, User, Lock, Bell, HelpCircle, MessageCircle, FileText, Shield, LogOut, Camera } from "lucide-react";
 import { UserContext } from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const iconColors = {
   indigo: "bg-indigo-50 text-indigo-700",
@@ -38,8 +38,8 @@ const menuGroups = [
 function MenuRow({ item }) {
   const Icon = item.icon;
   return (
-    <a
-      href={item.href}
+    <Link
+      to={item.href}
       className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-none"
     >
       <span className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${iconColors[item.color]}`}>
@@ -55,34 +55,13 @@ function MenuRow({ item }) {
         </span>
       )}
       <ChevronRight size={18} className="text-gray-500 flex-shrink-0" />
-    </a>
+    </Link>
   );
 }
 
 export default function Account() {
   const { user, setUser } = useContext(UserContext);
-  const fileInputRef = useRef(null);
   const navigate = useNavigate();
-
-  const handleAvatarChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const token = localStorage.getItem("token");
-    console.log("token:", token);
-
-    const formData = new FormData();
-    formData.append("avatar", file);
-
-    const res = await fetch("http://localhost:8000/api/upload-avatar/", {
-      method: "PATCH",
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      body: formData,
-    });
-
-    const data = await res.json();
-    setUser(data);
-  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -108,26 +87,13 @@ export default function Account() {
           <Edit2 size={14} /> Modifier
         </button>
         
-        {/* input caché, déclenché par le clic sur l'avatar */}
-        <input
-          type="file"
-          accept="image/*"
-          className="hidden"
-          ref={fileInputRef}
-          onChange={handleAvatarChange}
-        />
-
         <div
-          className="w-[120px] h-[120px] rounded-full bg-indigo-50 border-2 border-indigo-300 flex items-center justify-center text-indigo-700 text-4xl font-medium overflow-hidden cursor-pointer relative group"
-          onClick={() => fileInputRef.current.click()}
+          className="w-[120px] h-[120px] rounded-full bg-indigo-50 border-2 border-indigo-300 flex items-center justify-center text-indigo-700 text-4xl font-medium overflow-hidden relative group"
         >
           {avatarUrl
             ? <img src={avatarUrl} className="w-full h-full object-cover" alt="" />
             : user.pseudo?.[0] ?? ""
           }
-          <div className="absolute inset-0 bg-black/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <Camera size={18} className="text-white" />
-          </div>
         </div>
 
         <div className="text-center">

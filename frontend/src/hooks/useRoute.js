@@ -10,7 +10,6 @@ export function useRoute(start, end) {
 
     const key = `${start.lat}-${start.lng}-${end.lat}-${end.lng}`;
 
-    // ✅ 1. check cache
     if (routeCache[key]) {
       setRoute(routeCache[key]);
       return;
@@ -32,7 +31,6 @@ export function useRoute(start, end) {
 
         const formatted = coords.map(([lng, lat]) => [lat, lng]);
 
-        // ✅ 2. save in cache
         routeCache[key] = formatted;
 
         setRoute(formatted);

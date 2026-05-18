@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
+import { API_URLS } from "../utils";
 
 export default function Login() {
   const { setUser } = useContext(UserContext);
@@ -11,7 +12,7 @@ export default function Login() {
     e.preventDefault();
     const form = e.target;
 
-    const res = await fetch("http://localhost:8000/api/token/", {
+    const res = await fetch(API_URLS.token, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -25,7 +26,7 @@ export default function Login() {
       localStorage.setItem("token", access);
       localStorage.setItem("refreshToken", refresh);
 
-      const meRes = await fetch("http://localhost:8000/api/users/me/", {
+      const meRes = await fetch(API_URLS.me, {
         headers: { Authorization: `Bearer ${access}` },
       });
       const data = await meRes.json();

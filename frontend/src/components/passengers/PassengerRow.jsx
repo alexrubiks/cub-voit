@@ -1,4 +1,4 @@
-import Avatar from "./Avatar";
+import Avatar from "../ui/Avatar";
 import { X } from "lucide-react";
 
 function PassengerRow({ user, onRemove }) {

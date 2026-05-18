@@ -2,8 +2,9 @@ import { useState, useEffect, useContext } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { UserContext } from "../context/UserContext";
-import TravelRoute from "../components/TravelRoute";
-import TravelPopup from "../components/TravelPopup";
+import TravelRoute from "../components/travel/TravelRoute";
+import TravelPopup from "../components/travel/TravelPopup";
+import { API_URLS } from "../utils";
 
 // Fix icône Leaflet
 import L from "leaflet";
@@ -20,7 +21,7 @@ function Map() {
   const [selectedTravel, setSelectedTravel] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/travels/", {
+    fetch(API_URLS.travels, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
       .then((res) => res.json())

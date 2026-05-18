@@ -1,16 +1,26 @@
 import { Car, Pencil, User, Users } from "lucide-react";
 import PersonCard from "../passengers/PersonCard";
 
-function TravelCard({ travel, detailed, past, onClick }) {
+function TravelCard({ travel, detailed, past, onClick, status }) {
   const day = travel.date ? new Date(travel.date).getDate() : null;
   const month = travel.date
     ? new Date(travel.date).toLocaleString("fr-FR", { month: "short" })
     : null;
 
+  const borderColor = {
+    passenger: "border-indigo-600",
+    available: "border-emerald-500",
+    full: "border-amber-500",
+  };
+
+  const statusBorder = past
+  ? "opacity-70 border-gray-300"
+  : borderColor[status];
+
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-2xl border border-gray-100 shadow-sm p-4 active:scale-[0.98] transition cursor-pointer ${past ? "opacity-50" : ""}`}
+      className={`bg-white rounded-2xl border-2 shadow-sm p-4 active:scale-[0.98] transition cursor-pointer ${statusBorder}`}
     >
       <div className="flex justify-between items-start gap-3">
 

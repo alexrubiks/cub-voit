@@ -6,8 +6,9 @@ import Travels from "./pages/Travels";
 import Map from "./pages/Map";
 import CreateTravel from "./pages/CreateTravel";
 import Account from "./pages/Account";
+import AccountProfile from "./pages/account/AccountProfile";
 import UserProvider from "./context/UserProvider";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/ui/ProtectedRoute";
 
 function App() {
   return (
@@ -24,8 +25,7 @@ function App() {
           <Route path="/travels" element={<Travels />} />
           <Route path="/create" element={<CreateTravel />} />
           <Route path="/account" element={<Account />} />
-          <Route path="/account/profile" element={<AccountProfile />} />
-          <Route path="/account/security" element={<AccountSecurity />} />
+          <Route path="/account/profile" element={<AccountProfile />} /> 
         </Route>
       </Routes>
     </UserProvider>

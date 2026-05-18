@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { Car, ChevronDown, Plus } from "lucide-react";
 import VehicleModal from "./VehicleModal";
+import { API_URLS } from "../../utils";
 
 function VehicleSelect({ value, onChange }) {
   const [vehicles, setVehicles] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/vehicles/", {
+    fetch(API_URLS.vehicles, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
       .then((res) => res.json())

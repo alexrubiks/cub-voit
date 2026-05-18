@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Search, Plus, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import TravelList from "../components/TravelList";
+import TravelList from "../components/travel/TravelList";
+import { API_URLS } from "../utils";
 
 function Travels() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ function Travels() {
   useEffect(() => {
     const fetchTravels = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/travels/", {
+        const res = await fetch(API_URLS.travels, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         if (res.ok) {

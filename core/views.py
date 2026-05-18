@@ -158,6 +158,19 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
     
+    # PATCH /users/me/
+    @action(detail=False, methods=['patch'])
+    def update_me(self, request):
+        serializer = CurrentUserSerializer(
+            request.user,
+            data=request.data,
+            partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+    
     # POST /users/<id>/add_to_whitelist/
     @action(detail=True, methods=['post'])
     def add_to_whitelist(self, request, pk=None):

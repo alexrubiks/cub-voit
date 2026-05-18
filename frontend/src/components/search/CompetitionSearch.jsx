@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
+import { API_URLS } from "../../utils";
 
 function CompetitionSearch({ onSelect }) {
   const [query, setQuery] = useState("");
@@ -10,7 +11,7 @@ function CompetitionSearch({ onSelect }) {
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (query.length >= 2) {
-        fetch(`http://localhost:8000/api/competitions-search/?q=${query}`, {
+        fetch(`${API_URLS.competitions}?q=${query}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         })
           .then((res) => res.json())

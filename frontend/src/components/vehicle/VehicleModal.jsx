@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { X } from "lucide-react";
+import { API_URLS } from "../../utils";
 
 function VehicleModal({ onClose, onCreated }) {
   const [name, setName] = useState("");
@@ -8,7 +9,7 @@ function VehicleModal({ onClose, onCreated }) {
 
   const handleSubmit = async () => {
     if (!name || !seats) { setError("Tous les champs sont requis"); return; }
-    const res = await fetch("http://localhost:8000/api/vehicles/", {
+    const res = await fetch(API_URLS.vehicles, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

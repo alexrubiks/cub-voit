@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_URLS } from "../../utils";
 
 export default function UserSearch() {
   const [query, setQuery] = useState("");
@@ -6,12 +7,11 @@ export default function UserSearch() {
 
   const handleSearch = async () => {
     if (!query) return;
-
-    const res = await fetch(`http://localhost:8000/api/users/?search=${query}`, {
-      credentials: 'include'
+    const res = await fetch(`${API_URLS.users}?search=${query}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     const data = await res.json();
-    setResults(data.results);
+    setResults(data.results ?? data);
   };
 
   return (
@@ -23,7 +23,6 @@ export default function UserSearch() {
         onChange={(e) => setQuery(e.target.value)}
       />
       <button onClick={handleSearch}>Rechercher</button>
-
       <ul>
         {results.map((user) => (
           <li key={user.id}>{user.pseudo} ({user.wca_id})</li>
