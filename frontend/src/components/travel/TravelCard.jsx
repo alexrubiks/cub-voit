@@ -203,7 +203,7 @@ function TravelCard({ travel, detailed, past, onClick, status, onUpdated, onDele
                   />
                   {overCapacity && (
                     <p className="text-xs text-red-400 mt-1">
-                      Trop de passagers — retire les passagers en rouge pour continuer
+                      Trop de passagers — retirer des passagers ou changer de véhicule pour continuer
                     </p>
                   )}
                 </div>

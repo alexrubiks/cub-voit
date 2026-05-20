@@ -32,6 +32,10 @@ function CreateTravel() {
   const [submitting, setSubmitting] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [passengers, setPassengers] = useState([]);
+
+  const overCapacity = selectedVehicle
+  ? passengers.length > selectedVehicle.seats - 1
+  : false;
   
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -110,12 +114,17 @@ function CreateTravel() {
           onRemove={(u) => setPassengers((prev) => prev.filter((p) => p.id !== u.id))}
         />
       )}
+      {overCapacity && (
+        <p className="text-xs text-red-400 mt-1">
+          Trop de passagers pour ce véhicule — retirer des passagers ou changer de véhicule pour continuer
+        </p>
+      )}
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
       <button
         onClick={handleSubmit}
-        disabled={submitting}
+        disabled={submitting || overCapacity}
         className="w-full bg-indigo-600 text-white rounded-xl py-3 text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50"
       >
         {submitting ? "Création..." : "Créer le trajet"}
