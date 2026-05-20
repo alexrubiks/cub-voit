@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ChevronRight, Edit2, User, Lock, Bell, HelpCircle, MessageCircle, FileText, Shield, LogOut, Camera } from "lucide-react";
+import { ChevronRight, Edit2, User, Lock, HelpCircle, MessageCircle, FileText, Shield, LogOut, Camera, UserRoundCheck } from "lucide-react";
 import { UserContext } from "../context/UserContext";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -16,7 +16,7 @@ const menuGroups = [
     items: [
       { icon: User, label: "Informations personnelles", sub: "Pseudo, mail, domicile", color: "indigo", href: "/account/profile" },
       { icon: Lock, label: "Sécurité", sub: "Mot de passe, activité du compte", color: "indigo", href: "/account/security" },
-      { icon: Bell, label: "Notifications", badge: "3 actives", color: "blue", href: "/account/notifications" },
+      { icon: UserRoundCheck, label: "Cercle privé", sub: "Utilisateurs autorisés", color: "blue", href: "/account/whitelist" },
     ],
   },
   {
@@ -80,12 +80,6 @@ export default function Account() {
     <div className="min-h-screen bg-gray-50">
       {/* User */}
       <div className="px-5 pt-10 pb-8 flex flex-col items-center gap-2.5 relative">
-        <button
-          className="absolute top-4 right-4 flex items-center gap-1.5 text-gray-400 text-sm hover:text-gray-600 transition-colors"
-          onClick={() => {/* navigate to edit */}}
-        >
-          <Edit2 size={14} /> Modifier
-        </button>
         
         <div
           className="w-[120px] h-[120px] rounded-full bg-indigo-50 border-2 border-indigo-300 flex items-center justify-center text-indigo-700 text-4xl font-medium overflow-hidden relative group"
