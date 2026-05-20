@@ -12,6 +12,10 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.token_blacklist.models import (
+    BlacklistedToken,
+    OutstandingToken,
+)
 
 from core.models import Competition, Travel, User, Vehicle
 from core.serializers import (
@@ -199,6 +203,20 @@ class UserViewSet(viewsets.ModelViewSet):
         whitelist = request.user.allowed_users.all()
         serializer = self.get_serializer(whitelist, many=True)
         return Response(serializer.data)
+    
+    # POST /users/logout_all/
+    @action(detail=False, methods=['post'])
+    def logout_all(self, request):
+        tokens = OutstandingToken.objects.filter(user=request.user)
+        for token in tokens:
+            BlacklistedToken.objects.get_or_create(token=token)
+        return Response({"detail": "Tous les appareils déconnectés"})
+
+    # DELETE /users/delete_account/
+    @action(detail=False, methods=['delete'])
+    def delete_account(self, request):
+        request.user.delete()
+        return Response(status=204)
 
 
 class VehicleViewSet(viewsets.ModelViewSet):

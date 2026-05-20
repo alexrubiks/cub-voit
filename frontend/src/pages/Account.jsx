@@ -14,8 +14,8 @@ const menuGroups = [
   {
     title: "Mon compte",
     items: [
-      { icon: User, label: "Informations personnelles", sub: "Nom, adresse, téléphone", color: "indigo", href: "/account/profile" },
-      { icon: Lock, label: "Sécurité", sub: "Mot de passe, 2FA", color: "indigo", href: "/account/security" },
+      { icon: User, label: "Informations personnelles", sub: "Pseudo, mail, domicile", color: "indigo", href: "/account/profile" },
+      { icon: Lock, label: "Sécurité", sub: "Mot de passe, activité du compte", color: "indigo", href: "/account/security" },
       { icon: Bell, label: "Notifications", badge: "3 actives", color: "blue", href: "/account/notifications" },
     ],
   },

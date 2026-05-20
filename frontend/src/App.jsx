@@ -7,8 +7,10 @@ import Map from "./pages/Map";
 import CreateTravel from "./pages/CreateTravel";
 import Account from "./pages/Account";
 import AccountProfile from "./pages/account/AccountProfile";
+import AccountSecurity from "./pages/account/AccountSecurity";
 import UserProvider from "./context/UserProvider";
 import ProtectedRoute from "./components/ui/ProtectedRoute";
+
 
 function App() {
   return (
@@ -26,6 +28,7 @@ function App() {
           <Route path="/create" element={<CreateTravel />} />
           <Route path="/account" element={<Account />} />
           <Route path="/account/profile" element={<AccountProfile />} /> 
+          <Route path="/account/security" element={<AccountSecurity />} />
         </Route>
       </Routes>
     </UserProvider>
