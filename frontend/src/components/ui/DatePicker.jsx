@@ -71,7 +71,7 @@ function DatePicker({ selectedCompetition, onChange }) {
                 </>
               ) : day ? (
                 <div className="relative flex flex-col items-center justify-center w-full h-full">
-                  <span className={`absolute top-2 text-[10px] uppercase tracking-widest ${active ? "text-white/60" : "text-gray-300"}`}>
+                  <span className={`absolute top-2 text-[10px] uppercase tracking-widest ${active ? "text-white/60" : "text-gray-400"}`}>
                     {label}
                   </span>
                   <span className={`text-3xl font-bold leading-none ${active ? "text-white" : "text-indigo-600"}`}>
@@ -83,10 +83,10 @@ function DatePicker({ selectedCompetition, onChange }) {
                 </div>
               ) : (
                 <div className="relative flex flex-col items-center justify-center w-full h-full">
-                  <span className={`absolute top-2 text-[10px] uppercase tracking-widest ${active ? "text-white/60" : "text-gray-300"}`}>
+                  <span className={`absolute top-2 text-[10px] uppercase tracking-widest ${active ? "text-white/60" : "text-gray-400"}`}>
                     {label}
                   </span>
-                  <span className={`text-3xl font-bold leading-none ${active ? "text-white" : "text-gray-300"}`}>
+                  <span className={`text-3xl font-bold leading-none ${active ? "text-white" : "text-gray-400"}`}>
                     —
                   </span>
                 </div>

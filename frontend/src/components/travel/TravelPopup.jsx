@@ -63,7 +63,7 @@ function TravelPopup({ travel, currentUserId, onClose }) {
             </span>
             <p className="text-sm text-gray-600">
               {travel.start_location_name}
-              <span className="text-gray-300 mx-1">→</span>
+              <span className="text-gray-400 mx-1">→</span>
               {travel.end_location_name}
             </p>
           </div>
@@ -76,7 +76,7 @@ function TravelPopup({ travel, currentUserId, onClose }) {
               </span>
               <p className="text-sm text-gray-600">
                 {travel.vehicle.name}
-                <span className="text-gray-300 mx-1">·</span>
+                <span className="text-gray-400 mx-1">·</span>
                 {travel.vehicle.seats} places
               </p>
             </div>

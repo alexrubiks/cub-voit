@@ -167,7 +167,7 @@ export default function AccountProfile() {
                   />
                 ) : (
                   <span className="flex-1 text-sm text-gray-900">
-                    {user?.[field] || <span className="text-gray-300">—</span>}
+                    {user?.[field] || <span className="text-gray-400">—</span>}
                   </span>
                 )}
               </div>
@@ -193,7 +193,7 @@ export default function AccountProfile() {
               <div className="flex items-center gap-3">
                 <MapPin size={16} className="text-indigo-400 flex-shrink-0" />
                 <span className="text-sm text-gray-900">
-                  {user?.location_name || <span className="text-gray-300">Non défini</span>}
+                  {user?.location_name || <span className="text-gray-400">Non défini</span>}
                 </span>
               </div>
             )}

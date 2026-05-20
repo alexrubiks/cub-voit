@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import TravelCard from "./TravelCard";
 import { UserContext } from "../../context/UserContext";
 
-function TravelList({ travels, past }) {
+function TravelList({ travels, past, onUpdated, onDeleted }) {
   const { user } = useContext(UserContext);
   const [openedCards, setOpenedCards] = useState([]);
 
@@ -50,6 +50,8 @@ function TravelList({ travels, past }) {
             past={past}
             onClick={() => toggleCard(travel.id)}
             status={getStatus(travel)}
+            onUpdated={onUpdated}
+            onDeleted={onDeleted}
           />
         ))
       }

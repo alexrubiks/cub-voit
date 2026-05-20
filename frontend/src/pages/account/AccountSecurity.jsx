@@ -147,8 +147,8 @@ export default function AccountSecurity() {
                     className="absolute right-3 top-1/2 -translate-y-1/2"
                   >
                     {showPasswords[key]
-                      ? <EyeOff size={15} className="text-gray-300" />
-                      : <Eye size={15} className="text-gray-300" />
+                      ? <EyeOff size={15} className="text-gray-400" />
+                      : <Eye size={15} className="text-gray-400" />
                     }
                   </button>
                 </div>

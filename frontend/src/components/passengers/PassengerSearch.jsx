@@ -12,7 +12,9 @@ function PassengerSearch({ vehicle, passengers, onAdd, onRemove }) {
   const [focused, setFocused] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
 
-  const maxPassengers = vehicle.seats - 1; // -1 pour le conducteur
+  const maxPassengers = vehicle.seats - 1;
+  const validPassengers = passengers.slice(0, maxPassengers);
+  const excessPassengers = passengers.slice(maxPassengers);
   const isFull = passengers.length >= maxPassengers;
 
   useEffect(() => {
@@ -43,16 +45,13 @@ function PassengerSearch({ vehicle, passengers, onAdd, onRemove }) {
 
   return (
     <div>
-      <label className="text-xs uppercase tracking-widest text-gray-400 mb-2 block">
-        Passagers
-      </label>
 
       {/* Carte visuelle */}
       <div className="bg-white border border-gray-100 rounded-xl px-4 py-3 space-y-1">
 
         {/* Conducteur */}
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-[10px] uppercase tracking-widest text-gray-300 w-20 flex-shrink-0">Conducteur</span>
+          <span className="text-[10px] uppercase tracking-widest text-gray-400 w-20 flex-shrink-0">Conducteur</span>
           <div className="h-px flex-1 bg-gray-100" />
         </div>
         <PassengerRow user={user} />
@@ -60,7 +59,7 @@ function PassengerSearch({ vehicle, passengers, onAdd, onRemove }) {
         {/* Séparateur */}
         {(passengers.length > 0 || !isFull) && (
           <div className="flex items-center gap-2 pt-2 mb-1">
-            <span className="text-[10px] uppercase tracking-widest text-gray-300 w-20 flex-shrink-0">
+            <span className="text-[10px] uppercase tracking-widest text-gray-400 w-20 flex-shrink-0">
               Passagers {passengers.length}/{maxPassengers}
             </span>
             <div className="h-px flex-1 bg-gray-100" />
@@ -68,8 +67,13 @@ function PassengerSearch({ vehicle, passengers, onAdd, onRemove }) {
         )}
 
         {/* Liste des passagers */}
-        {passengers.map((p) => (
+        {validPassengers.map((p) => (
           <PassengerRow key={p.id} user={p} onRemove={onRemove} />
+        ))}
+        {excessPassengers.map((p) => (
+          <div key={p.id} className="bg-red-100 rounded-xl px-2">
+            <PassengerRow user={p} onRemove={onRemove} />
+          </div>
         ))}
 
         {/* Bouton ajouter */}
@@ -100,7 +104,7 @@ function PassengerSearch({ vehicle, passengers, onAdd, onRemove }) {
               onMouseDown={() => { setShowSearch(false); setQuery(""); }}
               className="absolute right-3 top-1/2 -translate-y-1/2"
             >
-              <X size={14} className="text-gray-300" />
+              <X size={14} className="text-gray-400" />
             </button>
 
             {focused && results.length > 0 && (

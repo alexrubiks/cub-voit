@@ -14,7 +14,7 @@ function PassengerRow({ user, onRemove }) {
           onClick={() => onRemove(user)}
           className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-red-50 transition flex-shrink-0"
         >
-          <X size={14} className="text-gray-300 hover:text-red-400 transition" />
+          <X size={14} className="text-gray-500 hover:text-red-400 transition" />
         </button>
       )}
     </div>

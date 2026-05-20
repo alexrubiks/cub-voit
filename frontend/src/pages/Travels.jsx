@@ -37,6 +37,16 @@ function Travels() {
   const upcoming = filtered.filter((t) => !t.date || new Date(t.date) >= now);
   const past = filtered.filter((t) => t.date && new Date(t.date) < now);
 
+  const handleUpdated = (updatedTravel) => {
+    setTravels((prev) =>
+      prev.map((t) => t.id === updatedTravel.id ? updatedTravel : t)
+    );
+  };
+
+  const handleDeleted = (id) => {
+    setTravels((prev) => prev.filter((t) => t.id !== id));
+  };
+
   return (
     <div className="p-4">
       {/* Header */}
@@ -90,7 +100,11 @@ function Travels() {
           {upcoming.length > 0 && (
             <div>
               <p className="text-xs uppercase tracking-widest text-gray-400 mb-2 px-1">À venir</p>
-              <TravelList travels={upcoming} />
+              <TravelList
+                travels={upcoming}
+                onUpdated={handleUpdated}
+                onDeleted={handleDeleted}
+              />
             </div>
           )}
           {past.length > 0 && (
