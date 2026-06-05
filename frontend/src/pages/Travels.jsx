@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "../context/UserContext";
 import { Search, Plus, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import TravelList from "../components/travel/TravelList";
@@ -10,6 +11,8 @@ function Travels() {
   const [loading, setLoading] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const { user } = useContext(UserContext);
+  const [filter, setFilter] = useState("all"); // "all" | "mine" | "others"
 
   useEffect(() => {
     const fetchTravels = async () => {
@@ -34,8 +37,22 @@ function Travels() {
     ? travels
     : travels.filter((t) => t.competition.name.toLowerCase().includes(search.toLowerCase()));
 
-  const upcoming = filtered.filter((t) => !t.date || new Date(t.date) >= now);
-  const past = filtered.filter((t) => t.date && new Date(t.date) < now);
+  const filterByRole = (list) => {
+    if (filter === "mine") return list.filter(
+      (t) => t.owner.id === user.id || t.passengers.some((p) => p.id === user.id)
+    );
+    if (filter === "others") return list.filter(
+      (t) => t.owner.id !== user.id && !t.passengers.some((p) => p.id === user.id)
+    );
+    return list;
+  };
+
+  const upcoming = filterByRole(filtered).filter((t) => !t.date || new Date(t.date) >= now);
+
+  const past = filterByRole(filtered).filter((t) => {
+    if (!t.date || new Date(t.date + "T00:00:00Z") >= now) return false;
+    return t.owner.id === user.id || t.passengers.some((p) => p.id === user.id);
+  });
 
   const handleUpdated = (updatedTravel) => {
     setTravels((prev) =>
@@ -67,6 +84,26 @@ function Travels() {
           </button>
         </div>
       </div>
+
+      <div className="flex gap-2 mb-4">
+      {[
+        { key: "all", label: "Tous" },
+        { key: "mine", label: "Mes trajets" },
+        { key: "others", label: "Proposés" },
+      ].map(({ key, label }) => (
+        <button
+          key={key}
+          onClick={() => setFilter(key)}
+          className={`px-3 py-1.5 rounded-xl text-sm border transition ${
+            filter === key
+              ? "bg-indigo-600 text-white border-indigo-600"
+              : "bg-white text-gray-500 border-gray-200 hover:border-indigo-300"
+          }`}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
 
       {/* Barre de recherche */}
       <div className={`overflow-hidden transition-all duration-200 ${searchOpen ? "max-h-16 mb-4" : "max-h-0"}`}>

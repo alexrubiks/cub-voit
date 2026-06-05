@@ -225,7 +225,6 @@ export default function AccountSecurity() {
           title="Supprimer mon compte"
           description="Toutes tes données seront supprimées définitivement. Cette action est irréversible."
           confirmLabel="Supprimer"
-          danger
           onConfirm={handleDeleteAccount}
           onClose={() => setShowDeleteAccount(false)}
         />

@@ -1,12 +1,12 @@
 import { AlertTriangle } from "lucide-react";
 
-function ConfirmModal({ title, description, confirmLabel, danger, onConfirm, onClose }) {
+function ConfirmModal({ title, description, confirmLabel,onConfirm, onClose }) {
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-end justify-center">
       <div className="bg-white w-full max-w-lg rounded-t-2xl p-6 space-y-4">
         <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${danger ? "bg-red-50" : "bg-amber-50"}`}>
-            <AlertTriangle size={18} className={danger ? "text-red-500" : "text-amber-500"} />
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-red-50`}>
+            <AlertTriangle size={18} className={"text-red-500"} />
           </div>
           <div>
             <p className="text-base font-medium text-gray-900">{title}</p>
@@ -22,7 +22,7 @@ function ConfirmModal({ title, description, confirmLabel, danger, onConfirm, onC
           </button>
           <button
             onClick={onConfirm}
-            className={`flex-1 py-2.5 rounded-xl text-sm text-white font-medium ${danger ? "bg-red-500" : "bg-amber-500"}`}
+            className={`flex-1 py-2.5 rounded-xl text-sm text-white font-medium bg-red-500`}
           >
             {confirmLabel}
           </button>

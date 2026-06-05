@@ -281,7 +281,7 @@ class TravelViewSet(viewsets.ModelViewSet):
             return Response({"detail": "Cannot add passenger: vehicle is full"}, status=400)
 
         travel.passengers.add(user_to_add)
-        return Response({"detail": f"{user_to_add.pseudo} added to passengers of {travel.name}"}, status=200)
+        return Response({"detail": f"{user_to_add.pseudo} added to passengers of {travel}"}, status=200)
 
     # POST /travels/<id>/remove_passenger/
     @action(detail=True, methods=['post'])
@@ -296,7 +296,7 @@ class TravelViewSet(viewsets.ModelViewSet):
             return Response({"detail": f"{user_to_remove.pseudo} is not a passenger"}, status=400)
 
         travel.passengers.remove(user_to_remove)
-        return Response({"detail": f"{user_to_remove.pseudo} removed from passengers of {travel.name}"}, status=200)
+        return Response({"detail": f"{user_to_remove.pseudo} removed from passengers of {travel}"}, status=200)
     
     # GET /travels/<id>/list_passengers/
     @action(detail=True, methods=['get'])

@@ -26,7 +26,7 @@ function TravelList({ travels, past, onUpdated, onDeleted }) {
     }
 
     const remainingSeats =
-      travel.car.seats - travel.passengers.length - 1;
+      travel.vehicle?.seats - travel.passengers.length - 1;
 
     if (remainingSeats > 0) {
       return "available";

@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Car, Pencil, User, Users, Check, LogOut, Trash2, MapPin } from "lucide-react";
+import { Car, Pencil, User, Users, Check, LogOut, Trash2, MapPin, UserPlus } from "lucide-react";
 import { UserContext } from "../../context/UserContext";
 import PersonCard from "../passengers/PersonCard";
 import DatePicker from "../ui/DatePicker";
@@ -97,14 +97,46 @@ function TravelCard({ travel, detailed, past, onClick, status, onUpdated, onDele
     setEditing(false);
   };
 
+  // ─── Rejoindre le trajet ──────────────────────────────────────────────
+  const [_, setJoining] = useState(false);
+
+  const handleJoin = async () => {
+    setJoining(true);
+    const res = await fetch(`${API_URLS.travels}${travel.id}/add_passenger/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ user_id: user.id }),
+    });
+    if (res.ok) {
+      // Refetch le trajet complet pour avoir les données à jour
+      const updated = await fetch(`${API_URLS.travels}${travel.id}/`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      const data = await updated.json();
+      onUpdated?.(data);
+    }
+    setJoining(false);
+  };
+
   // ─── Quitter le trajet ────────────────────────────────────────────────
   const handleLeave = async () => {
-    await fetch(`${API_URLS.travels}${travel.id}/remove_passenger/`, {
+    const res = await fetch(`${API_URLS.travels}${travel.id}/remove_passenger/`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
       body: JSON.stringify({ user_id: user.id }),
     });
-    onDeleted?.(travel.id);
+    if (res.ok) {
+      // Refetch le trajet complet
+      const updated = await fetch(`${API_URLS.travels}${travel.id}/`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      const data = await updated.json();
+      onUpdated?.(data);
+    }
+    setShowLeave(false);
   };
 
   // ─── Supprimer le trajet ──────────────────────────────────────────────
@@ -274,6 +306,18 @@ function TravelCard({ travel, detailed, past, onClick, status, onUpdated, onDele
                   </div>
                 )}
 
+                {/* Bouton rejoindre (disponible uniquement) */}
+                {!isOwner && !isPassenger && !past && status === "available" && (
+                  <div className="flex justify-end pt-1">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleJoin(); }}
+                      className="flex items-center gap-1.5 text-xs text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg hover:bg-emerald-100 transition"
+                    >
+                      <UserPlus size={13} /> Rejoindre
+                    </button>
+                  </div>
+                )}
+
                 {/* Bouton quitter (passager uniquement) */}
                 {isPassenger && !isOwner && !past && (
                   <div className="flex justify-end pt-1">
@@ -316,7 +360,6 @@ function TravelCard({ travel, detailed, past, onClick, status, onUpdated, onDele
           title="Supprimer le trajet"
           description="Le trajet sera supprimé définitivement pour tous les participants."
           confirmLabel="Supprimer"
-          danger
           onConfirm={handleDelete}
           onClose={() => setShowDelete(false)}
         />
