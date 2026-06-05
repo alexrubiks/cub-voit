@@ -8,6 +8,7 @@ import CreateTravel from "./pages/CreateTravel";
 import Account from "./pages/Account";
 import AccountProfile from "./pages/account/AccountProfile";
 import AccountSecurity from "./pages/account/AccountSecurity";
+import AccountWhitelist from "./pages/account/AccountWhitelist";
 import UserProvider from "./context/UserProvider";
 import ProtectedRoute from "./components/ui/ProtectedRoute";
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/account/profile" element={<AccountProfile />} /> 
           <Route path="/account/security" element={<AccountSecurity />} />
+          <Route path="/account/whitelist" element={<AccountWhitelist />} />
         </Route>
       </Routes>
     </UserProvider>
