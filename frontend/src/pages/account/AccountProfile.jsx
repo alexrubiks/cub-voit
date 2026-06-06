@@ -150,6 +150,13 @@ export default function AccountProfile() {
         <div>
           <p className="text-xs uppercase tracking-widest text-gray-400 mb-3 px-1">Profil</p>
           <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+
+            {/* ID */}
+            <div className="flex items-center px-4 py-3 border-b border-gray-50">
+              <span className="text-sm text-gray-400 w-24 flex-shrink-0">Identifiant</span>
+              <span className="flex-1 text-sm text-gray-300">{user?.username}</span>
+            </div>
+
             {[
               { label: "Pseudo", field: "pseudo" },
               { label: "Email", field: "email", type: "email" },

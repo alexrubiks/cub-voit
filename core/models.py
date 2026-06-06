@@ -50,6 +50,7 @@ class Competition(models.Model):
 
 class Travel(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    is_private = models.BooleanField(default=False)
 
     date = models.DateField(null=False)
     start_location_name = models.CharField(null=False, max_length=100)

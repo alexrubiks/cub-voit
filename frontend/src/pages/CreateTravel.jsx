@@ -6,6 +6,7 @@ import DatePicker from "../components/ui/DatePicker";
 import DepartureField from "../components/ui/DepartureField";
 import PassengerSearch from "../components/passengers/PassengerSearch";
 import VehicleSelect from "../components/vehicle/VehicleSelect";
+import PrivacyToggle from "../components/ui/PrivacyToggle";
 import { API_URLS } from "../utils";
 
 
@@ -15,6 +16,7 @@ function CreateTravel() {
 
   const [form, setForm] = useState({
     name: "",
+    is_private: false,
     date: "",
     start_location_name: user?.location_name ?? "",
     start_latitude: user?.location_latitude ?? "",
@@ -79,6 +81,11 @@ function CreateTravel() {
         handleChange("end_longitude", c.longitude);
         handleChange("date", "");
       }} />
+
+      <PrivacyToggle
+        value={form.is_private}
+        onChange={(val) => handleChange("is_private", val)}
+      />
 
       <DatePicker
         key={selectedCompetition?.id ?? "none"}

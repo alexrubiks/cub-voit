@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Car, Pencil, User, Users, Check, LogOut, Trash2, MapPin, UserPlus } from "lucide-react";
+import { Car, Pencil, User, Users, Check, LogOut, Trash2, MapPin, UserPlus, Lock, Globe } from "lucide-react";
 import { UserContext } from "../../context/UserContext";
 import PersonCard from "../passengers/PersonCard";
 import DatePicker from "../ui/DatePicker";
@@ -7,6 +7,7 @@ import VehicleSelect from "../vehicle/VehicleSelect";
 import PassengerSearch from "../passengers/PassengerSearch";
 import MapPickerModal from "../ui/MapPickerModal";
 import ConfirmModal from "../ui/ConfirmModal";
+import PrivacyToggle from "../ui/PrivacyToggle";
 import { API_URLS } from "../../utils";
 
 function TravelCard({ travel, detailed, past, onClick, status, onUpdated, onDeleted }) {
@@ -17,6 +18,7 @@ function TravelCard({ travel, detailed, past, onClick, status, onUpdated, onDele
   // ─── États édition ────────────────────────────────────────────────────
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({
+    is_private: travel.is_private ?? false,
     date: travel.date ?? "",
     start_location_name: travel.start_location_name ?? "",
     start_latitude: travel.start_latitude ?? null,
@@ -86,6 +88,7 @@ function TravelCard({ travel, detailed, past, onClick, status, onUpdated, onDele
 
   const handleCancel = () => {
     setForm({
+      is_private: travel.is_private ?? false,
       date: travel.date ?? "",
       start_location_name: travel.start_location_name ?? "",
       start_latitude: travel.start_latitude ?? null,
@@ -193,6 +196,12 @@ function TravelCard({ travel, detailed, past, onClick, status, onUpdated, onDele
 
             {editing ? (
               <>
+                {/* Visibilité */}
+                <PrivacyToggle
+                  value={form.is_private}
+                  onChange={(val) => setForm((p) => ({ ...p, is_private: val }))}
+                />
+
                 {/* Date */}
                 <DatePicker
                   selectedCompetition={{ date: travel.competition?.first_day ?? travel.date }}
@@ -265,6 +274,21 @@ function TravelCard({ travel, detailed, past, onClick, status, onUpdated, onDele
               </>
             ) : (
               <>
+                {/* Visibilité */}
+                {isOwner && (
+                  <div className="flex">
+                    {travel.is_private ? (
+                      <span className="text-[10px] uppercase tracking-widest bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+                        <Lock size={10} /> privé
+                      </span>
+                    ) : (
+                      <span className="text-[10px] uppercase tracking-widest bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+                        <Globe size={10} /> Public
+                      </span>
+                    )}
+                  </div>
+                )}
+
                 {/* Véhicule */}
                 <div className="flex items-center gap-3">
                   <span className="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center">

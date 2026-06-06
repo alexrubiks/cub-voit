@@ -126,7 +126,7 @@ export default function AccountSecurity() {
 
         {/* Mot de passe */}
         <div>
-          <p className="text-xs uppercase tracking-widest text-gray-400 mb-3 px-1">Mot de passe</p>
+          <p className="text-xs uppercase tracking-widest text-gray-400 mb-3 px-1">mot de passe</p>
           <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-4">
             {[
               { key: "current", label: "Mot de passe actuel" },
@@ -179,7 +179,7 @@ export default function AccountSecurity() {
 
         {/* Actions */}
         <div>
-          <p className="text-xs uppercase tracking-widest text-gray-400 mb-3 px-1">Actions</p>
+          <p className="text-xs uppercase tracking-widest text-gray-400 mb-3 px-1">Compte</p>
           <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
             <button
               onClick={() => setShowLogoutAll(true)}

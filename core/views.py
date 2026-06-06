@@ -305,11 +305,11 @@ class TravelViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-
         return Travel.objects.filter(
-            Q(owner=user) | 
-            Q(owner__in=user.allowed_by.all()) |
-            Q(passengers=user)
+            Q(owner=user) |
+            Q(passengers=user) |
+            Q(is_private=False) |
+            Q(is_private=True, owner__in=user.allowed_by.all())
         ).distinct()
 
     def perform_create(self, serializer):

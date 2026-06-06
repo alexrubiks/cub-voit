@@ -18,6 +18,7 @@ class CurrentUserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "id",
+            "username",
             "pseudo",
             "wca_id",
             "email",
@@ -80,6 +81,7 @@ class TravelSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "owner",
+            "is_private",
             "date",
             "start_location_name",
             "start_latitude",
