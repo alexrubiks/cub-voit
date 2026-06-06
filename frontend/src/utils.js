@@ -13,6 +13,7 @@ export const API_URLS = {
   travels: `${API_BASE}/api/travels/`,
   vehicles: `${API_BASE}/api/vehicles/`,
   competitions: `${API_BASE}/api/competitions-search/`,
+  disconnectWca: `${API_BASE}/api/users/disconnect_wca/`,
 };
 
 export async function getTravels() {

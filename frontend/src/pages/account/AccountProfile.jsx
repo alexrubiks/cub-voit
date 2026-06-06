@@ -1,9 +1,10 @@
 import { useState, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, Camera, Pencil, X, Check, MapPin } from "lucide-react";
+import { ChevronLeft, Camera, Pencil, X, Check, MapPin, LogOut } from "lucide-react";
 import { UserContext } from "../../context/UserContext";
 import MapPickerModal from "../../components/ui/MapPickerModal";
 import { API_URLS, normalizeUser } from "../../utils";
+import wcaLogo from "../../assets/wca-logo.png";
 
 export default function AccountProfile() {
   const { user, setUser } = useContext(UserContext);
@@ -18,7 +19,6 @@ export default function AccountProfile() {
   const [form, setForm] = useState({
     pseudo: user?.pseudo ?? "",
     email: user?.email ?? "",
-    wca_id: user?.wca_id ?? "",
     location_name: user?.location_name ?? "",
     location_latitude: user?.location_latitude ?? null,
     location_longitude: user?.location_longitude ?? null,
@@ -32,7 +32,6 @@ export default function AccountProfile() {
     setForm({
       pseudo: user?.pseudo ?? "",
       email: user?.email ?? "",
-      wca_id: user?.wca_id ?? "",
       location_name: user?.location_name ?? "",
       location_latitude: user?.location_latitude ?? null,
       location_longitude: user?.location_longitude ?? null,
@@ -154,9 +153,8 @@ export default function AccountProfile() {
             {[
               { label: "Pseudo", field: "pseudo" },
               { label: "Email", field: "email", type: "email" },
-              { label: "WCA ID", field: "wca_id" },
             ].map(({ label, field, type = "text" }) => (
-              <div key={field} className="flex items-center px-4 py-3 border-b border-gray-50 last:border-none">
+              <div key={field} className="flex items-center px-4 py-3 border-b border-gray-50">
                 <span className="text-sm text-gray-400 w-24 flex-shrink-0">{label}</span>
                 {editing ? (
                   <input
@@ -172,6 +170,39 @@ export default function AccountProfile() {
                 )}
               </div>
             ))}
+
+            {/* WCA ID */}
+            <div className="flex items-center px-4 py-3">
+              <span className="text-sm text-gray-400 w-24 flex-shrink-0">WCA ID</span>
+              {user?.wca_id ? (
+                <>
+                  <span className="flex-1 text-sm text-gray-900">{user.wca_id}</span>
+                  <button
+                    onClick={async () => {
+                      await fetch(API_URLS.disconnectWca, {
+                        method: "POST",
+                        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+                      });
+                      setUser((prev) => ({ ...prev, wca_id: null }));
+                    }}
+                    className="text-xs text-gray-300 hover:text-red-400 transition"
+                  >
+                    <LogOut size={14} />
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    const token = localStorage.getItem("token");
+                    window.location.href = `http://localhost:8000/auth/wca/login/?token=${token}`;
+                  }}
+                  className="flex-1 flex items-center justify-center gap-2 text-sm text-indigo-500 hover:text-indigo-700 transition"
+                >
+                  <img src={wcaLogo} className="w-4 h-4" alt="WCA" />
+                  Se connecter avec la WCA
+                </button>
+              )}
+            </div>
           </div>
         </div>
 

@@ -12,6 +12,7 @@ class PublicUserSerializer(serializers.ModelSerializer):
 
 class CurrentUserSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(use_url=True)
+    wca_id = serializers.CharField(read_only=True)
 
     class Meta:
         model = User

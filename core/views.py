@@ -1,10 +1,12 @@
 from datetime import date
 
 import requests
+import os
+from urllib.parse import urlencode
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
@@ -30,6 +32,7 @@ from .pagination import SmallResultsPagination
 from .permissions import IsOwner, IsOwnerOrAllowedOrSelfPassenger, IsSelf, ReadOnly
 
 URL = "https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/refs/heads/v1/competitions.json"
+WCA_SECRET = os.getenv("WCA_SECRET")
 
 
 @staff_member_required
@@ -100,6 +103,50 @@ def search_competitions(request):
     ]
 
     return JsonResponse(data, safe=False)
+
+
+# GET /auth/wca/login/
+def wca_login(request):
+    token = request.GET.get("token")
+    params = {
+        "client_id": "eHO1MDjbHiwrpJ_uorPdd8uYIr94K9EcHYtNAkJsdCs",
+        "response_type": "code",
+        "redirect_uri": "http://localhost:8000/auth/wca/callback",
+        "scope": "public",
+        "state": token,
+    }
+    url = "https://www.worldcubeassociation.org/oauth/authorize?" + urlencode(params)
+    return redirect(url)
+
+
+# GET /auth/wca/callback
+def wca_callback(request):
+    code = request.GET.get("code")
+    token = request.GET.get("state")
+
+    from rest_framework_simplejwt.tokens import AccessToken
+    access = AccessToken(token)
+    user = User.objects.get(id=access["user_id"])
+
+    res = requests.post("https://www.worldcubeassociation.org/oauth/token", data={
+        "code": code,
+        "client_id": "eHO1MDjbHiwrpJ_uorPdd8uYIr94K9EcHYtNAkJsdCs",
+        "client_secret": WCA_SECRET,
+        "redirect_uri": "http://localhost:8000/auth/wca/callback",
+        "grant_type": "authorization_code",
+    })
+    wca_token = res.json()["access_token"]
+
+    profile = requests.get(
+        "https://www.worldcubeassociation.org/api/v0/me",
+        headers={"Authorization": f"Bearer {wca_token}"}
+    ).json()
+    wca_id = profile["me"]["wca_id"]
+
+    user.wca_id = wca_id
+    user.save()
+
+    return redirect("http://localhost:5173/account/profile?wca=success")
 
 
 class UpdateAvatarView(APIView):
@@ -174,6 +221,13 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
+    
+    # POST /users/disconnect_wca/
+    @action(detail=False, methods=['post'])
+    def disconnect_wca(self, request):
+        request.user.wca_id = None
+        request.user.save()
+        return Response({"detail": "WCA déconnecté"})
     
     # POST /users/<id>/add_to_whitelist/
     @action(detail=True, methods=['post'])
