@@ -4,15 +4,17 @@ import { Search, Plus, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import TravelList from "../components/travel/TravelList";
 import { API_URLS } from "../utils";
+import { useSearchParams } from "react-router-dom";
 
 function Travels() {
   const navigate = useNavigate();
   const [travels, setTravels] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [search, setSearch] = useState("");
   const { user } = useContext(UserContext);
   const [filter, setFilter] = useState("all"); // "all" | "mine" | "others"
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search") ?? "");
+  const [searchOpen, setSearchOpen] = useState(!!searchParams.get("search"));
 
   useEffect(() => {
     const fetchTravels = async () => {

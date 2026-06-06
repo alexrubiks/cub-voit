@@ -1,4 +1,5 @@
-import { X, Car, User, Users, MapPin, Calendar } from "lucide-react";
+import { X, Car, User, Users, MapPin } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function TravelPopup({ travel, currentUserId, onClose }) {
   if (!travel) return null;
@@ -11,9 +12,15 @@ function TravelPopup({ travel, currentUserId, onClose }) {
     ? new Date(travel.date + "T00:00:00Z").toLocaleString("fr-FR", { month: "short" })
     : null;
 
+  const navigate = useNavigate();
+
   return (
-    <div className="fixed inset-0 z-[1000] flex items-end justify-center pointer-events-none">
-      <div className="bg-white w-full max-w-lg rounded-t-2xl shadow-xl pointer-events-auto">
+    <div className="fixed inset-x-0 bottom-16 z-[1000] flex items-end justify-center">
+      {/* Fond cliquable pour fermer */}
+      <div className="absolute inset-0" onClick={onClose} />
+
+      {/* Popup */}
+      <div className="bg-white w-full max-w-lg rounded-t-2xl shadow-xl relative">
 
         {/* Handle */}
         <div className="flex justify-center pt-3 pb-1">
@@ -54,7 +61,7 @@ function TravelPopup({ travel, currentUserId, onClose }) {
         </div>
 
         {/* Contenu */}
-        <div className="px-5 pb-6 space-y-3">
+        <div className="px-5 pb-4 space-y-3">
 
           {/* Itinéraire */}
           <div className="flex items-center gap-3">
@@ -119,6 +126,16 @@ function TravelPopup({ travel, currentUserId, onClose }) {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Bouton voir plus */}
+        <div className="px-5 pb-5">
+          <button
+            onClick={() => { onClose(); navigate(`/travels?search=${encodeURIComponent(travel.competition?.name ?? travel.name)}`); }}
+            className="w-full bg-indigo-600 text-white rounded-xl py-3 text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50"
+          >
+            Voir plus
+          </button>
         </div>
       </div>
     </div>

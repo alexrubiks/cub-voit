@@ -17,7 +17,7 @@ function BottomNav() {
     : location.pathname.startsWith(path);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 h-16 flex items-center">
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 h-16 flex items-center z-40">
       {tabs.map(({ label, icon: Icon, path }) => (
         <button
           key={path}

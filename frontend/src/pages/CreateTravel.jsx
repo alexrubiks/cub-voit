@@ -77,9 +77,11 @@ function CreateTravel() {
         handleChange("end_location_name", c.location);
         handleChange("end_latitude", c.latitude);
         handleChange("end_longitude", c.longitude);
+        handleChange("date", "");
       }} />
 
       <DatePicker
+        key={selectedCompetition?.id ?? "none"}
         selectedCompetition={selectedCompetition}
         onChange={(date) => handleChange("date", date)}
       />

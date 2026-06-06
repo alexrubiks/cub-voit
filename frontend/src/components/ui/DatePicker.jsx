@@ -12,7 +12,9 @@ function DatePicker({ selectedCompetition, onChange }) {
 
   const handleDateMode = (mode) => {
     setDateMode(mode);
+
     if (!selectedCompetition) return;
+
     if (mode === "same") {
       onChange(selectedCompetition.date);
     } else if (mode === "before") {
@@ -44,6 +46,7 @@ function DatePicker({ selectedCompetition, onChange }) {
       <label className="text-xs uppercase tracking-widest text-gray-400 mb-2 block">
         Date de départ
       </label>
+
       <div className="flex gap-2 mb-2">
         {buttons.map(({ key, label, date }) => {
           const active = dateMode === key;

@@ -14,7 +14,7 @@ const menuGroups = [
   {
     title: "Mon compte",
     items: [
-      { icon: User, label: "Informations personnelles", sub: "Pseudo, mail, domicile", color: "indigo", href: "/account/profile" },
+      { icon: User, label: "Informations personnelles", sub: "Pseudo, email, domicile", color: "indigo", href: "/account/profile" },
       { icon: Lock, label: "Sécurité", sub: "Mot de passe, activité du compte", color: "indigo", href: "/account/security" },
       { icon: UserRoundCheck, label: "Cercle privé", sub: "Utilisateurs autorisés", color: "blue", href: "/account/whitelist" },
     ],
@@ -77,9 +77,9 @@ export default function Account() {
   console.log(avatarUrl)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="p-2 pb-0">
       {/* User */}
-      <div className="px-5 pt-10 pb-8 flex flex-col items-center gap-2.5 relative">
+      <div className="px-5 pt-10 pb-6 flex flex-col items-center gap-2.5 relative">
         
         <div
           className="w-[120px] h-[120px] rounded-full bg-indigo-50 border-2 border-indigo-300 flex items-center justify-center text-indigo-700 text-4xl font-medium overflow-hidden relative group"
