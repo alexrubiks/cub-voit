@@ -11,7 +11,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.token_blacklist.models import (
@@ -169,6 +169,8 @@ class UserViewSet(viewsets.ModelViewSet):
     pagination_class = SmallResultsPagination
 
     def get_permissions(self):
+        if self.action == "register":
+            return [AllowAny()]
         if self.action in ["retrieve", "update", "partial_update", "destroy"]:
             return [IsAuthenticated(), IsSelf()]
         return [IsAuthenticated()]
@@ -203,6 +205,36 @@ class UserViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         return Response({"detail": "Creation not allowed via this endpoint."}, status=405)
     
+    @action(detail=False, methods=['post'])
+    def register(self, request):
+        username = request.data.get("username")
+        pseudo = request.data.get("pseudo")
+        email = request.data.get("email")
+        password = request.data.get("password")
+
+        if not all([username, pseudo, password]):
+            return Response({"detail": "Champs obligatoires manquants"}, status=400)
+
+        if User.objects.filter(username=username).exists():
+            return Response({"detail": "Ce nom d'utilisateur est déjà pris"}, status=400)
+
+        if User.objects.filter(pseudo=pseudo).exists():
+            return Response({"detail": "Ce pseudo est déjà pris"}, status=400)
+
+        user = User.objects.create_user(
+            username=username,
+            pseudo=pseudo,
+            email=email,
+            password=password,
+        )
+
+        from rest_framework_simplejwt.tokens import RefreshToken
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+        }, status=201)
+    
     # GET /users/me/
     @action(detail=False, methods=['get'])
     def me(self, request):
@@ -212,6 +244,10 @@ class UserViewSet(viewsets.ModelViewSet):
     # PATCH /users/me/
     @action(detail=False, methods=['patch'])
     def update_me(self, request):
+        pseudo = request.data.get("pseudo")
+        if pseudo and User.objects.filter(pseudo=pseudo).exclude(pk=request.user.pk).exists():
+            return Response({"detail": "Ce pseudo est déjà pris"}, status=400)
+        
         serializer = CurrentUserSerializer(
             request.user,
             data=request.data,

@@ -1,6 +1,6 @@
 import { AlertTriangle } from "lucide-react";
 
-function ConfirmModal({ title, description, confirmLabel,onConfirm, onClose }) {
+function ConfirmModal({ title, description, confirmLabel, onConfirm, onClose }) {
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-end justify-center">
       <div className="bg-white w-full max-w-lg rounded-t-2xl p-6 space-y-4">

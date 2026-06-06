@@ -57,7 +57,7 @@ export default function AccountProfile() {
         setUser(normalizeUser(data));
         setEditing(false);
       } else {
-        setError(JSON.stringify(data));
+        setError(data.detail ?? "Une erreur est survenue");
       }
     } catch {
       setError("Erreur réseau");

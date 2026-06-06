@@ -17,10 +17,7 @@ function WhitelistCard({ user, onRemove }) {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-gray-900">{user.pseudo}</p>
-        {user.wca_id
-          ? <p className="text-xs text-gray-400">{user.wca_id}</p>
-          : <p className="text-xs text-gray-300">Pas de WCA ID</p>
-        }
+        {user.wca_id && <p className="text-xs text-gray-400">{user.wca_id}</p>}
       </div>
       <button
         onClick={() => onRemove(user)}
@@ -128,7 +125,7 @@ export default function AccountWhitelist() {
         {/* Explication */}
         <div className="bg-indigo-50 rounded-xl px-4 py-3">
           <p className="text-xs text-indigo-600 leading-relaxed">
-            Les personnes de ton cercle privé peuvent voir tes trajets même si tu ne les as pas ajoutées comme passagers.
+            Les personnes de ton cercle pourront voir tes trajets privés même si tu ne les as pas ajoutées comme passagers.
           </p>
         </div>
 
