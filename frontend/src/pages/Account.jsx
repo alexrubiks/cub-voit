@@ -23,8 +23,8 @@ const menuGroups = [
   {
     title: "Support",
     items: [
-      { icon: HelpCircle,    label: "FAQ",              color: "amber", href: "/faq" },
-      { icon: MessageCircle, label: "Nous contacter",   color: "amber", href: "/contact" },
+      { icon: HelpCircle,    label: "FAQ",              color: "amber", href: "/support/faq" },
+      { icon: MessageCircle, label: "Nous contacter",   color: "amber", href: "/support/contact" },
     ],
   },
   {
