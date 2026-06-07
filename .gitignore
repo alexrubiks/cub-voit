@@ -23,9 +23,6 @@ venv.bak/
 *.db
 *.sqlite3-journal
 /media/
-# Si tu ne veux pas suivre les migrations :
-core/migrations/
-*/migrations/
 
 # VS Code
 .vscode/
