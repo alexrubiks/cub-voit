@@ -7,7 +7,6 @@ import TravelRoute from "../components/travel/TravelRoute";
 import TravelPopup from "../components/travel/TravelPopup";
 import { API_URLS } from "../utils";
 
-// Fix icône Leaflet
 import L from "leaflet";
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -20,7 +19,7 @@ function Map() {
   const { user } = useContext(UserContext);
   const [travels, setTravels] = useState([]);
   const [selectedTravel, setSelectedTravel] = useState(null);
-  const [filter, setFilter] = useState("all"); // "all" | "mine" | "others"
+  const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -53,6 +52,8 @@ function Map() {
 
   return (
     <div className="fixed inset-0">
+
+      {/* Carte */}
       <MapContainer
         className="h-full w-full"
         center={[46.5, 2.5]}
@@ -61,7 +62,7 @@ function Map() {
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          attribution='&copy; OpenStreetMap'
         />
         {filteredTravels.map((travel) => (
           <TravelRoute
@@ -74,53 +75,52 @@ function Map() {
       </MapContainer>
 
       {/* Légende */}
-      <div className="absolute top-4 left-4 z-[500] bg-white rounded-xl shadow-sm border border-gray-100 px-3 py-2.5 space-y-1.5">
+      <div className="absolute top-4 left-4 z-[500] bg-bg-surface rounded-lg shadow-sm border border-border px-3 py-2.5 space-y-1.5">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-1 rounded-full bg-indigo-500" />
-          <span className="text-xs text-gray-500">Mes trajets</span>
+          <div className="w-6 h-1 rounded-full" style={{ background: 'var(--route-mine)' }} />
+          <span className="text-xs text-text-muted">Mes trajets</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-6 h-1 rounded-full bg-emerald-500" />
-          <span className="text-xs text-gray-500">Disponibles</span>
+          <div className="w-6 h-1 rounded-full" style={{ background: "var(--route-other)" }} />
+          <span className="text-xs text-text-muted">Disponibles</span>
         </div>
       </div>
 
       {/* Contrôles */}
       <div className="absolute top-4 right-4 z-[500] flex flex-col items-end gap-2">
-        
-        {/* Bouton recherche */}
         <button
           onClick={() => setSearchOpen(!searchOpen)}
-          className="w-9 h-9 rounded-full bg-white border border-gray-100 shadow-sm flex items-center justify-center"
+          className="w-9 h-9 rounded-full bg-bg-surface border border-border shadow-sm flex items-center justify-center hover:bg-bg-raised transition"
         >
-          {searchOpen ? <X size={16} className="text-gray-500" /> : <Search size={16} className="text-gray-500" />}
+          {searchOpen
+            ? <X size={16} className="text-text-muted" />
+            : <Search size={16} className="text-text-muted" />
+          }
         </button>
 
-        {/* Barre de recherche */}
         {searchOpen && (
           <input
             autoFocus
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher un trajet..."
-            className="w-48 px-3 py-2 bg-white border border-gray-100 rounded-xl text-sm text-gray-900 focus:outline-none shadow-sm"
+            className="w-48 px-3 py-2 bg-bg-surface border border-border rounded-lg text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary shadow-sm"
           />
         )}
 
-        {/* Filtres */}
         <div className="flex flex-col gap-1.5">
           {[
-            { key: "all", label: "Tous" },
-            { key: "mine", label: "Mes trajets" },
+            { key: "all",    label: "Tous" },
+            { key: "mine",   label: "Mes trajets" },
             { key: "others", label: "Proposés" },
           ].map(({ key, label }) => (
             <button
               key={key}
               onClick={() => setFilter(key)}
-              className={`px-3 py-1.5 rounded-xl text-xs border shadow-sm transition ${
+              className={`px-3 py-1.5 rounded-full text-xs border shadow-sm transition ${
                 filter === key
-                  ? "bg-indigo-600 text-white border-indigo-600"
-                  : "bg-white text-gray-500 border-gray-100 hover:border-indigo-300"
+                  ? "bg-primary text-primary-text border-primary"
+                  : "bg-bg-surface text-text-muted border-border hover:border-border-strong"
               }`}
             >
               {label}

@@ -24,9 +24,8 @@ export default function AccountProfile() {
     location_longitude: user?.location_longitude ?? null,
   });
 
-  const handleChange = (field, value) => {
+  const handleChange = (field, value) =>
     setForm((prev) => ({ ...prev, [field]: value }));
-  };
 
   const handleCancel = () => {
     setForm({
@@ -82,28 +81,25 @@ export default function AccountProfile() {
     }
   };
 
-  const avatarUrl = user?.avatar || null;
-  const initials = user?.pseudo?.[0] ?? "";
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-bg-base">
 
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-6 pb-4">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate("/account")}
-            className="w-9 h-9 rounded-xl bg-white border border-gray-100 flex items-center justify-center"
+            className="w-9 h-9 rounded-lg bg-bg-surface border border-border flex items-center justify-center hover:bg-bg-raised transition"
           >
-            <ChevronLeft size={18} className="text-gray-500" />
+            <ChevronLeft size={18} className="text-text-muted" />
           </button>
-          <h1 className="text-lg font-medium text-gray-900">Informations personnelles</h1>
+          <h1 className="text-lg font-medium text-text-primary">Informations personnelles</h1>
         </div>
 
         {!editing ? (
           <button
             onClick={() => setEditing(true)}
-            className="flex items-center gap-1.5 text-sm text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg"
+            className="flex items-center gap-1.5 text-sm text-primary bg-primary-subtle px-3 py-1.5 rounded-lg"
           >
             <Pencil size={13} /> Modifier
           </button>
@@ -111,14 +107,14 @@ export default function AccountProfile() {
           <div className="flex items-center gap-2">
             <button
               onClick={handleCancel}
-              className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center"
+              className="w-8 h-8 rounded-lg bg-bg-raised flex items-center justify-center hover:bg-bg-raised transition"
             >
-              <X size={16} className="text-gray-500" />
+              <X size={16} className="text-text-muted" />
             </button>
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-1.5 text-sm text-white bg-indigo-600 px-3 py-1.5 rounded-lg disabled:opacity-50"
+              className="flex items-center gap-1.5 text-sm text-primary-text bg-primary px-3 py-1.5 rounded-lg hover:bg-primary-hover transition disabled:opacity-50"
             >
               <Check size={13} /> {saving ? "..." : "Sauvegarder"}
             </button>
@@ -132,47 +128,47 @@ export default function AccountProfile() {
         <div className="flex flex-col items-center py-4">
           <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleAvatarChange} />
           <div
-            className="w-24 h-24 rounded-full bg-indigo-50 border-2 border-indigo-100 flex items-center justify-center text-indigo-700 text-2xl font-medium overflow-hidden cursor-pointer relative group"
+            className="w-24 h-24 rounded-full bg-primary-subtle border-2 border-primary flex items-center justify-center text-primary text-2xl font-medium overflow-hidden cursor-pointer relative group"
             onClick={() => fileInputRef.current.click()}
           >
-            {avatarUrl
-              ? <img src={avatarUrl} className="w-full h-full object-cover" alt="" />
-              : initials
+            {user?.avatar
+              ? <img src={user.avatar} className="w-full h-full object-cover" alt="" />
+              : user?.pseudo?.[0] ?? ""
             }
             <div className="absolute inset-0 bg-black/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <Camera size={20} className="text-white" />
             </div>
           </div>
-          <p className="text-xs text-gray-400 mt-2">Appuie pour changer la photo</p>
+          <p className="text-xs text-text-muted mt-2">Appuie pour changer la photo</p>
         </div>
 
         {/* Profil */}
         <div>
-          <p className="text-xs uppercase tracking-widest text-gray-400 mb-3 px-1">Profil</p>
-          <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+          <p className="text-xs uppercase tracking-widest text-text-muted mb-3 px-1">Profil</p>
+          <div className="bg-bg-surface rounded-lg border border-border overflow-hidden">
 
-            {/* ID */}
-            <div className="flex items-center px-4 py-3 border-b border-gray-50">
-              <span className="text-sm text-gray-400 w-24 flex-shrink-0">Identifiant</span>
-              <span className="flex-1 text-sm text-gray-300">{user?.username}</span>
+            {/* Identifiant — lecture seule */}
+            <div className="flex items-center px-4 py-3 border-b border-border">
+              <span className="text-sm text-text-muted w-24 flex-shrink-0">Identifiant</span>
+              <span className="flex-1 text-sm text-text-disabled">{user?.username}</span>
             </div>
 
             {[
               { label: "Pseudo", field: "pseudo" },
-              { label: "Email", field: "email", type: "email" },
+              { label: "Email",  field: "email", type: "email" },
             ].map(({ label, field, type = "text" }) => (
-              <div key={field} className="flex items-center px-4 py-3 border-b border-gray-50">
-                <span className="text-sm text-gray-400 w-24 flex-shrink-0">{label}</span>
+              <div key={field} className="flex items-center px-4 py-3 border-b border-border">
+                <span className="text-sm text-text-muted w-24 flex-shrink-0">{label}</span>
                 {editing ? (
                   <input
                     type={type}
                     value={form[field]}
                     onChange={(e) => handleChange(field, e.target.value)}
-                    className="flex-1 text-sm text-gray-900 focus:outline-none bg-transparent border-b border-indigo-300 pb-0.5"
+                    className="flex-1 text-sm text-text-primary focus:outline-none bg-transparent border-b border-primary pb-0.5"
                   />
                 ) : (
-                  <span className="flex-1 text-sm text-gray-900">
-                    {user?.[field] || <span className="text-gray-400">—</span>}
+                  <span className="flex-1 text-sm text-text-primary">
+                    {user?.[field] || <span className="text-text-muted">—</span>}
                   </span>
                 )}
               </div>
@@ -180,10 +176,10 @@ export default function AccountProfile() {
 
             {/* WCA ID */}
             <div className="flex items-center px-4 py-3">
-              <span className="text-sm text-gray-400 w-24 flex-shrink-0">WCA ID</span>
+              <span className="text-sm text-text-muted w-24 flex-shrink-0">WCA ID</span>
               {user?.wca_id ? (
                 <>
-                  <span className="flex-1 text-sm text-gray-900">{user.wca_id}</span>
+                  <span className="flex-1 text-sm text-text-primary">{user.wca_id}</span>
                   <button
                     onClick={async () => {
                       await fetch(API_URLS.disconnectWca, {
@@ -192,7 +188,7 @@ export default function AccountProfile() {
                       });
                       setUser((prev) => ({ ...prev, wca_id: null }));
                     }}
-                    className="text-xs text-gray-300 hover:text-red-400 transition"
+                    className="text-text-disabled hover:text-danger-text transition"
                   >
                     <LogOut size={14} />
                   </button>
@@ -203,7 +199,7 @@ export default function AccountProfile() {
                     const token = localStorage.getItem("token");
                     window.location.href = `http://localhost:8000/auth/wca/login/?token=${token}`;
                   }}
-                  className="flex-1 flex items-center justify-center gap-2 text-sm text-indigo-500 hover:text-indigo-700 transition"
+                  className="flex-1 flex items-center justify-center gap-2 text-sm text-primary hover:text-primary-hover transition"
                 >
                   <img src={wcaLogo} className="w-4 h-4" alt="WCA" />
                   Se connecter avec la WCA
@@ -215,32 +211,31 @@ export default function AccountProfile() {
 
         {/* Domicile */}
         <div>
-          <p className="text-xs uppercase tracking-widest text-gray-400 mb-3 px-1">Domicile</p>
-          <div className="bg-white rounded-xl border border-gray-100 p-4">
+          <p className="text-xs uppercase tracking-widest text-text-muted mb-3 px-1">Domicile</p>
+          <div className="bg-bg-surface rounded-lg border border-border p-4">
             {editing ? (
               <button
                 onClick={() => setShowMap(true)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl hover:border-indigo-300 transition"
+                className="w-full flex items-center gap-3 px-3 py-2.5 bg-bg-base border border-border rounded-lg hover:border-primary transition"
               >
-                <MapPin size={16} className="text-indigo-500 flex-shrink-0" />
-                <span className={`text-sm ${form.location_name ? "text-gray-900" : "text-gray-400"}`}>
+                <MapPin size={16} className="text-primary flex-shrink-0" />
+                <span className={`text-sm ${form.location_name ? "text-text-primary" : "text-text-muted"}`}>
                   {form.location_name || "Choisir sur la carte..."}
                 </span>
               </button>
             ) : (
               <div className="flex items-center gap-3">
-                <MapPin size={16} className="text-indigo-400 flex-shrink-0" />
-                <span className="text-sm text-gray-900">
-                  {user?.location_name || <span className="text-gray-400">Non défini</span>}
+                <MapPin size={16} className="text-primary flex-shrink-0" />
+                <span className="text-sm text-text-primary">
+                  {user?.location_name || <span className="text-text-muted">Non défini</span>}
                 </span>
               </div>
             )}
           </div>
         </div>
 
-        {/* Erreur */}
         {error && (
-          <p className="text-xs text-red-400 px-1">{error}</p>
+          <p className="text-xs text-danger-text px-1">{error}</p>
         )}
 
       </div>

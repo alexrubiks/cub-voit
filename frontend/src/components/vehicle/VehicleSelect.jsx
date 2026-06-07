@@ -22,21 +22,21 @@ function VehicleSelect({ value, onChange }) {
 
   return (
     <div>
-      <label className="text-xs uppercase tracking-widest text-gray-400 mb-2 block">
+      <label className="text-xs uppercase tracking-widest text-text-muted mb-2 block">
         Véhicule
       </label>
       <div className="flex gap-2">
         <div className="relative flex-1">
-          <Car size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+          <Car size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+          <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
           <select
             value={value}
             onChange={(e) => {
               const vehicle = vehicles.find((v) => v.id === parseInt(e.target.value));
               onChange(vehicle);
             }}
-            className={`w-full appearance-none pl-9 pr-8 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-indigo-300 ${
-              value ? "text-gray-900" : "text-gray-400"
+            className={`w-full appearance-none pl-9 pr-8 py-2.5 bg-bg-surface border border-border rounded-lg text-sm focus:outline-none focus:border-primary ${
+              value ? "text-text-primary" : "text-text-muted"
             }`}
           >
             <option value="" disabled hidden>Sélectionner...</option>
@@ -49,12 +49,11 @@ function VehicleSelect({ value, onChange }) {
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center hover:bg-indigo-100 transition flex-shrink-0"
+          className="w-10 h-10 rounded-lg bg-primary-subtle flex items-center justify-center hover:bg-primary hover:text-primary-text transition flex-shrink-0"
         >
-          <Plus size={18} className="text-indigo-600" />
+          <Plus size={18} className="text-primary" />
         </button>
       </div>
-
       {showModal && (
         <VehicleModal
           onClose={() => setShowModal(false)}

@@ -1,10 +1,11 @@
 import { Polyline } from "react-leaflet";
 import { useRoute } from "../../hooks/useRoute";
 
-const COLORS = {
-  mine: "#6366f1",   // indigo-500 — je suis owner ou passager
-  other: "#10b981",  // emerald-500 — trajet disponible d'un autre
-};
+function getCSSVar(name) {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+}
 
 function TravelRoute({ travel, currentUserId, onClick }) {
   const route = useRoute(
@@ -14,17 +15,20 @@ function TravelRoute({ travel, currentUserId, onClick }) {
 
   if (!route.length) return null;
 
-  const isOwner = travel.owner?.id === currentUserId;
-  const isPassenger = travel.passengers?.some((p) => p.id === currentUserId);
-  const isMine = isOwner || isPassenger;
+  const isMine = travel.owner?.id === currentUserId
+    || travel.passengers?.some((p) => p.id === currentUserId);
+
+  const color = isMine
+    ? getCSSVar("--route-mine")
+    : getCSSVar("--route-other");
 
   return (
     <Polyline
       positions={route}
       pathOptions={{
-        color: isMine ? COLORS.mine : COLORS.other,
-        weight: isMine ? 5 : 4,
-        opacity: isMine ? 0.9 : 0.6,
+        color,
+        weight: 4,
+        opacity: 1,
       }}
       eventHandlers={{
         click: () => onClick(travel),

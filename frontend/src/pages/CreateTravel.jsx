@@ -9,7 +9,6 @@ import VehicleSelect from "../components/vehicle/VehicleSelect";
 import PrivacyToggle from "../components/ui/PrivacyToggle";
 import { API_URLS } from "../utils";
 
-
 function CreateTravel() {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
@@ -36,31 +35,49 @@ function CreateTravel() {
   const [passengers, setPassengers] = useState([]);
 
   const overCapacity = selectedVehicle
-  ? passengers.length > selectedVehicle.seats - 1
-  : false;
-  
+    ? passengers.length > selectedVehicle.seats - 1
+    : false;
+
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async () => {
     setError(null);
-    if (!form.competition_id) { setError("Sélectionner une compétition"); return; }
-    if (!form.date) { setError("Choisir une date"); return; }
-    if (!form.vehicle_id) { setError("Sélectionner un véhicule"); return; }
-    if (!form.start_location_name) { setError("Indiquer un lieu de départ"); return; }
+
+    if (!form.competition_id) {
+      setError("Sélectionner une compétition");
+      return;
+    }
+    if (!form.date) {
+      setError("Choisir une date");
+      return;
+    }
+    if (!form.vehicle_id) {
+      setError("Sélectionner un véhicule");
+      return;
+    }
+    if (!form.start_location_name) {
+      setError("Indiquer un lieu de départ");
+      return;
+    }
 
     setSubmitting(true);
+
     const res = await fetch(API_URLS.travels, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({ ...form, passengers_ids: passengers.map((p) => p.id) }),
+      body: JSON.stringify({
+        ...form,
+        passengers_ids: passengers.map((p) => p.id),
+      }),
     });
 
     setSubmitting(false);
+
     if (res.ok) {
       navigate("/travels");
     } else {
@@ -70,17 +87,21 @@ function CreateTravel() {
   };
 
   return (
-    <div className="p-4 space-y-5 pb-8">
-      <h1 className="text-3xl text-gray-900 font-bold">Créer un trajet</h1>
+    <div className="p-4 space-y-5 pb-8 bg-bg-base min-h-screen">
+      <h1 className="text-3xl text-text-primary font-bold">
+        Créer un trajet
+      </h1>
 
-      <CompetitionSearch onSelect={(c) => {
-        setSelectedCompetition(c);
-        handleChange("competition_id", c.id);
-        handleChange("end_location_name", c.location);
-        handleChange("end_latitude", c.latitude);
-        handleChange("end_longitude", c.longitude);
-        handleChange("date", "");
-      }} />
+      <CompetitionSearch
+        onSelect={(c) => {
+          setSelectedCompetition(c);
+          handleChange("competition_id", c.id);
+          handleChange("end_location_name", c.location);
+          handleChange("end_latitude", c.latitude);
+          handleChange("end_longitude", c.longitude);
+          handleChange("date", "");
+        }}
+      />
 
       <PrivacyToggle
         value={form.is_private}
@@ -95,13 +116,18 @@ function CreateTravel() {
 
       <DepartureField
         value={form.start_location_name}
-        onChange={(fields) => setForm((prev) => ({ ...prev, ...fields }))}
+        onChange={(fields) =>
+          setForm((prev) => ({ ...prev, ...fields }))
+        }
       />
 
       {form.end_location_name && (
         <div>
-          <label className="text-sm uppercase tracking-widest text-gray-400 mb-2 block">Destination</label>
-          <div className="w-full border border-gray-200 bg-gray-50 rounded-xl px-3 py-2.5 text-sm text-gray-500">
+          <label className="text-sm uppercase tracking-widest text-text-muted mb-2 block">
+            Destination
+          </label>
+
+          <div className="w-full border border-border bg-bg-surface rounded-lg px-3 py-2.5 text-sm text-text-muted">
             {form.end_location_name}
           </div>
         </div>
@@ -119,22 +145,33 @@ function CreateTravel() {
         <PassengerSearch
           vehicle={selectedVehicle}
           passengers={passengers}
-          onAdd={(u) => setPassengers((prev) => [...prev, u])}
-          onRemove={(u) => setPassengers((prev) => prev.filter((p) => p.id !== u.id))}
+          onAdd={(u) =>
+            setPassengers((prev) => [...prev, u])
+          }
+          onRemove={(u) =>
+            setPassengers((prev) =>
+              prev.filter((p) => p.id !== u.id)
+            )
+          }
         />
       )}
+
       {overCapacity && (
-        <p className="text-xs text-red-400 mt-1">
-          Trop de passagers pour ce véhicule — retirer des passagers ou changer de véhicule pour continuer
+        <p className="text-xs text-danger-text mt-1">
+          Trop de passagers pour ce véhicule — retire des passagers ou change de véhicule pour continuer
         </p>
       )}
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && (
+        <p className="text-sm text-danger-text">
+          {error}
+        </p>
+      )}
 
       <button
         onClick={handleSubmit}
         disabled={submitting || overCapacity}
-        className="w-full bg-indigo-600 text-white rounded-xl py-3 text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50"
+        className="w-full bg-primary text-primary-text rounded-lg py-3 text-sm font-medium hover:bg-primary-hover transition disabled:opacity-50"
       >
         {submitting ? "Création..." : "Créer le trajet"}
       </button>

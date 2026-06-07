@@ -28,42 +28,46 @@ function VehicleModal({ onClose, onCreated }) {
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-end justify-center">
-      <div className="bg-gray-50 w-full max-w-lg rounded-t-2xl p-6 space-y-4">
+      <div className="bg-bg-surface w-full max-w-lg rounded-t-xl p-6 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-medium text-gray-900">Nouveau véhicule</h2>
-          <button onClick={onClose}><X size={20} className="text-gray-400" /></button>
+          <h2 className="text-base font-medium text-text-primary">Nouveau véhicule</h2>
+          <button onClick={onClose} className="hover:text-text-primary transition">
+            <X size={20} className="text-text-muted" />
+          </button>
         </div>
+
         <div className="space-y-3">
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className="text-xs text-gray-500 mb-1 block">Nom du véhicule</label>
+              <label className="text-xs text-text-muted mb-1 block">Nom du véhicule</label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Ex: Peugeot 308"
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-indigo-300 bg-white"
+                className="w-full border border-border rounded-lg px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary bg-bg-surface"
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">Places</label>
-              <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white">
+              <label className="text-xs text-text-muted mb-1 block">Places</label>
+              <div className="flex items-center border border-border rounded-lg overflow-hidden bg-bg-surface">
                 <button
                   onClick={() => setSeats(Math.max(1, parseInt(seats || 1) - 1))}
-                  className="px-3 py-2.5 text-gray-500 hover:bg-gray-50 transition"
+                  className="px-3 py-2.5 text-text-muted hover:bg-bg-raised transition"
                 >−</button>
-                <span className="w-6 text-center text-sm text-gray-900">{seats}</span>
+                <span className="w-6 text-center text-sm text-text-primary">{seats}</span>
                 <button
                   onClick={() => setSeats(parseInt(seats || 0) + 1)}
-                  className="px-3 py-2.5 text-gray-500 hover:bg-gray-50 transition"
+                  className="px-3 py-2.5 text-text-muted hover:bg-bg-raised transition"
                 >+</button>
               </div>
             </div>
           </div>
-          {error && <p className="text-xs text-red-500">{error}</p>}
+          {error && <p className="text-xs text-danger-text">{error}</p>}
         </div>
+
         <button
           onClick={handleSubmit}
-          className="w-full bg-indigo-600 text-white rounded-xl py-3 text-sm font-medium hover:bg-indigo-700 transition"
+          className="w-full bg-primary text-primary-text rounded-lg py-3 text-sm font-medium hover:bg-primary-hover transition"
         >
           Créer le véhicule
         </button>

@@ -2,114 +2,154 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────────────────────────────────
+   DESIGN SYSTEM — CubVoit
+   Convention : toujours utiliser ces variables,
+   jamais de couleurs hardcodées dans les composants.
+───────────────────────────────────────── */
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* Backgrounds — 3 niveaux de profondeur */
+  --bg-base:    #F7F8FA;   /* fond de page */
+  --bg-surface: #FFFFFF;   /* cartes, inputs, modals */
+  --bg-raised:  #EDEEF2;   /* hover states, éléments surélevés */
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* Borders */
+  --border:       #E0E3E9;
+  --border-strong: #CBD0D9;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Text */
+  --text-primary:   #0F1117;
+  --text-secondary: #3D4354;
+  --text-muted:     #6B7280;
+  --text-disabled:  #A0A5B2;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  /* Accent indigo — couleur principale CubVoit */
+  --primary:        #4F46E5;
+  --primary-hover:  #4338CA;
+  --primary-subtle: #EEF2FF;
+  --primary-text:   #FFFFFF;
+
+  /* Sémantiques */
+  --success-bg:   #DCFCE7;  --success-text: #166534;
+  --warning-bg:   #FEF3C7;  --warning-text: #92400E;
+  --danger-bg:    #FEE2E2;  --danger-text:  #991B1B;
+  --info-bg:      #DBEAFE;  --info-text:    #1E40AF;
+
+  /* Trajets */
+  --route-mine:  #3189ED;
+  --route-other: #5FD36A;
+
+  /* Typographie */
+  --font-sans:  system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:  ui-monospace, Consolas, monospace;
+
+  /* Rayons */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-full: 9999px;
+
+  /* Ombres */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.10);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* ─── Dark mode ─── */
+.dark {
+  --bg-base:    #10111A;
+  --bg-surface: #1B1D2E;
+  --bg-raised:  #23253A;
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+  --border:        #2A2D3E;
+  --border-strong: #3A3E52;
+
+  --text-primary:   #F0F2F8;
+  --text-secondary: #C5CADC;
+  --text-muted:     #8B91A8;
+  --text-disabled:  #4A4F66;
+
+  --primary:        #6366F1;
+  --primary-hover:  #818CF8;
+  --primary-subtle: #1E1B4B;
+  --primary-text:   #FFFFFF;
+
+  --success-bg:   #1A3626;  --success-text: #86EFAC;
+  --warning-bg:   #2E2010;  --warning-text: #FCD34D;
+  --danger-bg:    #2D1515;  --danger-text:  #FCA5A5;
+  --info-bg:      #172554;  --info-text:    #BAE6FD;
+
+  --route-mine:  #3189ED;
+  --route-other: #74b96f;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.30);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.40);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.50);
+}
+
+/* ─── Reset & base ─── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+  background: var(--bg-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  color-scheme: light dark;
 }
 
 body {
   margin: 0;
+  min-height: 100svh;
 }
 
+/* ─── Layout racine — mobile-first ─── */
 #root {
-  width: 1126px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 480px;        /* cadre mobile */
   margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  background: var(--bg-base);
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
+/* ─── Typographie ─── */
+h1, h2, h3, h4 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--text-primary);
   margin: 0;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
+h1 { font-size: 28px; }
+h2 { font-size: 22px; }
+h3 { font-size: 18px; }
+h4 { font-size: 15px; }
+
+p  { margin: 0; }
 
 code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  color: var(--text-primary);
+}
+
+/* ─── Leaflet dark mode ─── */
+.dark .leaflet-tile-pane {
+  filter: brightness(0.8) saturate(0.8);
 }

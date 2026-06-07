@@ -11,29 +11,34 @@ import AccountSecurity from "./pages/account/AccountSecurity";
 import AccountWhitelist from "./pages/account/AccountWhitelist";
 import UserProvider from "./context/UserProvider";
 import ProtectedRoute from "./components/ui/ProtectedRoute";
+import ThemeProvider from "./context/ThemeProvider";
 
 
 function App() {
   return (
-    <UserProvider>
-      <Routes>
-        <Route path="/login" element={<Login />} />
+    <ThemeProvider>
+      <UserProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
 
-        <Route element={
-          <ProtectedRoute>
-            <AppLayout />
-          </ProtectedRoute>
-        }>
-          <Route path="/" element={<Map />} />
-          <Route path="/travels" element={<Travels />} />
-          <Route path="/create" element={<CreateTravel />} />
-          <Route path="/account" element={<Account />} />
-          <Route path="/account/profile" element={<AccountProfile />} /> 
-          <Route path="/account/security" element={<AccountSecurity />} />
-          <Route path="/account/whitelist" element={<AccountWhitelist />} />
-        </Route>
-      </Routes>
-    </UserProvider>
+          <Route
+            element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/" element={<Map />} />
+            <Route path="/travels" element={<Travels />} />
+            <Route path="/create" element={<CreateTravel />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="/account/profile" element={<AccountProfile />} /> 
+            <Route path="/account/security" element={<AccountSecurity />} />
+            <Route path="/account/whitelist" element={<AccountWhitelist />} />
+          </Route>
+        </Routes>
+      </UserProvider>
+    </ThemeProvider>
   );
 }
 

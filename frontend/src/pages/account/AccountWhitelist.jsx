@@ -8,22 +8,22 @@ import ConfirmModal from "../../components/ui/ConfirmModal";
 // ─── Carte membre du cercle ──────────────────────────────────────────────────
 function WhitelistCard({ user, onRemove }) {
   return (
-    <div className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl px-4 py-3">
-      <div className="w-10 h-10 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center overflow-hidden flex-shrink-0">
+    <div className="flex items-center gap-3 bg-bg-surface border border-border rounded-lg px-4 py-3">
+      <div className="w-10 h-10 rounded-full bg-primary-subtle border border-border flex items-center justify-center overflow-hidden flex-shrink-0">
         {user.avatar
           ? <img src={user.avatar} className="w-full h-full object-cover" alt="" />
-          : <span className="text-sm text-indigo-500 font-medium">{user.pseudo?.[0]}</span>
+          : <span className="text-sm text-primary font-medium">{user.pseudo?.[0]}</span>
         }
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-900">{user.pseudo}</p>
-        {user.wca_id && <p className="text-xs text-gray-400">{user.wca_id}</p>}
+        <p className="text-sm font-medium text-text-primary">{user.pseudo}</p>
+        {user.wca_id && <p className="text-xs text-text-muted">{user.wca_id}</p>}
       </div>
       <button
         onClick={() => onRemove(user)}
-        className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-red-50 transition flex-shrink-0"
+        className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-danger-bg transition flex-shrink-0"
       >
-        <X size={15} className="text-gray-300 hover:text-red-400 transition" />
+        <X size={15} className="text-text-disabled hover:text-danger-text transition" />
       </button>
     </div>
   );
@@ -50,14 +50,13 @@ export default function AccountWhitelist() {
   useEffect(() => {
     fetch(`${API_URLS.users}list_whitelist/`, { headers: authHeader })
       .then((res) => res.json())
-      .then((data) => { setWhitelist(data.results ?? data); setLoading(false); })
       .then((data) => {
-        const sorted = (data.results ?? data).sort((a, b) => 
-            a.pseudo.localeCompare(b.pseudo)
+        const sorted = (data.results ?? data).sort((a, b) =>
+          a.pseudo.localeCompare(b.pseudo)
         );
         setWhitelist(sorted);
         setLoading(false);
-        });
+      });
   }, []);
 
   // ─── Recherche utilisateurs ───────────────────────────────────────────
@@ -102,19 +101,19 @@ export default function AccountWhitelist() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-bg-base">
 
       {/* Header */}
       <div className="flex items-center gap-3 px-4 pt-6 pb-4">
         <button
           onClick={() => navigate("/account")}
-          className="w-9 h-9 rounded-xl bg-white border border-gray-100 flex items-center justify-center"
+          className="w-9 h-9 rounded-lg bg-bg-surface border border-border flex items-center justify-center hover:bg-bg-raised transition"
         >
-          <ChevronLeft size={18} className="text-gray-500" />
+          <ChevronLeft size={18} className="text-text-muted" />
         </button>
         <div>
-          <h1 className="text-lg font-medium text-gray-900">Cercle privé</h1>
-          <p className="text-xs text-gray-400">
+          <h1 className="text-lg font-medium text-text-primary">Cercle privé</h1>
+          <p className="text-xs text-text-muted">
             {whitelist.length} {whitelist.length === 1 ? "personne" : "personnes"}
           </p>
         </div>
@@ -123,62 +122,62 @@ export default function AccountWhitelist() {
       <div className="px-4 space-y-4 pb-8">
 
         {/* Explication */}
-        <div className="bg-indigo-50 rounded-xl px-4 py-3">
-          <p className="text-xs text-indigo-600 leading-relaxed">
+        <div className="bg-primary-subtle rounded-lg px-4 py-3">
+          <p className="text-xs text-primary leading-relaxed">
             Les personnes de ton cercle pourront voir tes trajets privés même si tu ne les as pas ajoutées comme passagers.
           </p>
         </div>
 
         {/* Recherche */}
         <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
           <input
             value={query}
             onChange={(e) => { setQuery(e.target.value); setFocused(true); }}
             onFocus={() => setFocused(true)}
             onBlur={() => setTimeout(() => setFocused(false), 150)}
             placeholder="Ajouter par pseudo ou WCA ID..."
-            className="w-full pl-9 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:border-indigo-300"
+            className="w-full pl-9 pr-3 py-2.5 bg-bg-surface border border-border rounded-lg text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary"
           />
           {focused && results.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-100 rounded-xl shadow-md z-10 overflow-hidden">
+            <div className="absolute top-full left-0 right-0 mt-1 bg-bg-surface border border-border rounded-lg shadow-md z-10 overflow-hidden">
               {results.map((u) => (
                 <div
                   key={u.id}
                   onMouseDown={() => handleAdd(u)}
-                  className="flex items-center gap-3 px-4 py-3 hover:bg-indigo-50 cursor-pointer border-b border-gray-50 last:border-none"
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-bg-raised cursor-pointer border-b border-border last:border-none"
                 >
-                  <div className="w-8 h-8 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center overflow-hidden flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-primary-subtle flex items-center justify-center overflow-hidden flex-shrink-0">
                     {u.avatar
                       ? <img src={u.avatar} className="w-full h-full object-cover" alt="" />
-                      : <span className="text-xs text-indigo-500">{u.pseudo?.[0]}</span>
+                      : <span className="text-xs text-primary">{u.pseudo?.[0]}</span>
                     }
                   </div>
                   <div>
-                    <p className="text-sm text-gray-900">{u.pseudo}</p>
-                    {u.wca_id && <p className="text-xs text-gray-400">{u.wca_id}</p>}
+                    <p className="text-sm text-text-primary">{u.pseudo}</p>
+                    {u.wca_id && <p className="text-xs text-text-muted">{u.wca_id}</p>}
                   </div>
                 </div>
               ))}
             </div>
           )}
           {focused && query.length >= 2 && !searching && results.length === 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-100 rounded-xl shadow-md z-10 px-4 py-3">
-              <p className="text-sm text-gray-400">Aucun utilisateur trouvé</p>
+            <div className="absolute top-full left-0 right-0 mt-1 bg-bg-surface border border-border rounded-lg shadow-md z-10 px-4 py-3">
+              <p className="text-sm text-text-muted">Aucun utilisateur trouvé</p>
             </div>
           )}
         </div>
 
         {/* Liste */}
         {loading ? (
-          <p className="text-center text-gray-400 text-sm mt-8">Chargement...</p>
+          <p className="text-center text-text-muted text-sm mt-8">Chargement...</p>
         ) : whitelist.length === 0 ? (
           <div className="flex flex-col items-center justify-center mt-12 gap-2">
-            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-              <Users size={22} className="text-gray-300" />
+            <div className="w-12 h-12 rounded-full bg-bg-raised flex items-center justify-center">
+              <Users size={22} className="text-text-disabled" />
             </div>
-            <p className="text-sm text-gray-400">Ton cercle privé est vide</p>
-            <p className="text-xs text-gray-300">Recherche des amis pour les ajouter</p>
+            <p className="text-sm text-text-muted">Ton cercle privé est vide</p>
+            <p className="text-xs text-text-disabled">Recherche des amis pour les ajouter</p>
           </div>
         ) : (
           <div className="space-y-2">
