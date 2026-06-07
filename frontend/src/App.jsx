@@ -15,7 +15,7 @@ import ProtectedRoute from "./components/ui/ProtectedRoute";
 import ThemeProvider from "./context/ThemeProvider";
 import NotFound from "./pages/NotFound";
 import Contact from "./pages/support/Contact";
-import FAQ from "./pages/support/Faq";
+import FAQ from "./pages/support/FAQ";
 import CGU from "./pages/legal/CGU";
 import Privacy from "./pages/legal/Privacy";
 
