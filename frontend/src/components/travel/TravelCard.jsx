@@ -151,7 +151,7 @@ function TravelCard({ travel, detailed, past, onClick, status, onUpdated, onDele
   const borderColor = {
     passenger: "border-primary",
     available: "border-success-text",
-    full:      "border-warning-text",
+    full:      "border border-route-full",
   };
   const statusBorder = past ? "opacity-70 border-border" : borderColor[status];
 

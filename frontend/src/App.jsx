@@ -12,6 +12,7 @@ import AccountWhitelist from "./pages/account/AccountWhitelist";
 import UserProvider from "./context/UserProvider";
 import ProtectedRoute from "./components/ui/ProtectedRoute";
 import ThemeProvider from "./context/ThemeProvider";
+import NotFound from "./pages/NotFound";
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
             <Route path="/account/profile" element={<AccountProfile />} /> 
             <Route path="/account/security" element={<AccountSecurity />} />
             <Route path="/account/whitelist" element={<AccountWhitelist />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </UserProvider>

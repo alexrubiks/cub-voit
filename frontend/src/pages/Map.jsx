@@ -77,12 +77,16 @@ function Map() {
       {/* Légende */}
       <div className="absolute top-4 left-4 z-[500] bg-bg-surface rounded-lg shadow-sm border border-border px-3 py-2.5 space-y-1.5">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-1 rounded-full" style={{ background: 'var(--route-mine)' }} />
+          <div className="w-6 h-1 rounded-full" style={{ background: "var(--route-mine)" }} />
           <span className="text-xs text-text-muted">Mes trajets</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-6 h-1 rounded-full" style={{ background: "var(--route-other)" }} />
           <span className="text-xs text-text-muted">Disponibles</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-1 rounded-full" style={{ background: "var(--route-full)" }} />
+          <span className="text-xs text-text-muted">Complets</span>
         </div>
       </div>
 

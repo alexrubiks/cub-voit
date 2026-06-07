@@ -18,8 +18,12 @@ function TravelRoute({ travel, currentUserId, onClick }) {
   const isMine = travel.owner?.id === currentUserId
     || travel.passengers?.some((p) => p.id === currentUserId);
 
+  const isFull = travel.passengers.length >= travel.vehicle.seats - 1;
+
   const color = isMine
     ? getCSSVar("--route-mine")
+    : isFull
+    ? getCSSVar("--route-full")
     : getCSSVar("--route-other");
 
   return (

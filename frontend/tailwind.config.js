@@ -45,6 +45,11 @@ export default {
           bg:   'var(--warning-bg)',
           text: 'var(--warning-text)',
         },
+        route: {
+          mine:  'var(--route-mine)',
+          other: 'var(--route-other)',
+          full:  'var(--route-full)',
+        },
         danger: {
           bg:   'var(--danger-bg)',
           text: 'var(--danger-text)',

@@ -39,6 +39,7 @@
   /* Trajets */
   --route-mine:  #3189ED;
   --route-other: #5FD36A;
+  --route-full: #F59E0B;
 
   /* Typographie */
   --font-sans:  system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -83,6 +84,7 @@
 
   --route-mine:  #3189ED;
   --route-other: #74b96f;
+  --route-full: #F59E0B;
 
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.30);
   --shadow-md: 0 4px 12px rgba(0,0,0,0.40);
