@@ -8,6 +8,7 @@ from core.views import (
     VehicleViewSet,
     UpdateAvatarView,
     search_competitions,
+    sync_competitions,
 )
 
 router = DefaultRouter()
@@ -20,4 +21,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path("upload-avatar/", UpdateAvatarView.as_view()),
     path("competitions-search/", search_competitions),
+    path("sync-competitions/", sync_competitions),
 ]
