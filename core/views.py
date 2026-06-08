@@ -35,8 +35,10 @@ URL = "https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/refs/head
 WCA_SECRET = os.getenv("WCA_SECRET")
 
 
-@staff_member_required
 def sync_competitions(request):
+    token = request.headers.get("X-Sync-Token")
+    if token != os.environ.get("SYNC_SECRET"):
+        return JsonResponse({"error": "Unauthorized"}, status=401)
     response = requests.get(URL)
     data = response.json()
     count = 0
