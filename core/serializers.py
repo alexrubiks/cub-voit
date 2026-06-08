@@ -13,6 +13,7 @@ class PublicUserSerializer(serializers.ModelSerializer):
 class CurrentUserSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(use_url=True)
     wca_id = serializers.CharField(read_only=True)
+    location_name = serializers.CharField(allow_blank=True, required=False)
 
     class Meta:
         model = User

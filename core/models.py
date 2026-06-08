@@ -9,7 +9,7 @@ class User(AbstractUser):
     email = models.EmailField(max_length=100, blank=True, null=True)
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
 
-    location_name = models.CharField(max_length=100)
+    location_name = models.CharField(max_length=100, blank=True, default="")
     location_latitude = models.FloatField(blank=True, null=True)
     location_longitude = models.FloatField(blank=True, null=True)
 
