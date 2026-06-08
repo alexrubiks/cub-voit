@@ -143,6 +143,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     "https://cubvoit.alexrubiks.fr",
+    "https://cub-voit.vercel.app",
 ]
 
 # PROD frontend (Vercel)
