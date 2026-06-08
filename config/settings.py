@@ -2,6 +2,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
+from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
@@ -146,9 +147,9 @@ CORS_ALLOWED_ORIGINS = [
     "https://cub-voit.vercel.app",
 ]
 
-# PROD frontend (Vercel)
-if os.getenv("CORS_ALLOWED_ORIGINS"):
-    CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS").split(",")
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "authorization",
+]
 
 # -----------------------
 # SECURITY HARDENING (PROD)
