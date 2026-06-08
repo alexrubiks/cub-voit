@@ -117,7 +117,11 @@ export default function Login() {
           <h1 className="text-4xl font-bold text-text-primary">
             CubVoit
           </h1>
+          <p className="text-text-muted text-lg">
+            L'appli de covoiturage pour les compétitions
+          </p>
         </div>
+
 
         {/* Toggle login / register */}
         <div className="flex rounded-lg overflow-hidden border border-border bg-bg-surface mb-6">

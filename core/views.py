@@ -3,7 +3,6 @@ from datetime import date
 import requests
 import os
 from urllib.parse import urlencode
-from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect

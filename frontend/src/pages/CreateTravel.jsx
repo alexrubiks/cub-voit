@@ -87,7 +87,7 @@ function CreateTravel() {
   };
 
   return (
-    <div className="p-4 space-y-5 pb-8 bg-bg-base min-h-screen">
+    <div className="p-4 space-y-5 pb-24 bg-bg-base">
       <h1 className="text-3xl text-text-primary font-bold">
         Créer un trajet
       </h1>
