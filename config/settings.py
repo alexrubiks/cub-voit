@@ -141,7 +141,7 @@ SIMPLE_JWT = {
 # CORS (FRONTEND)
 # -----------------------
 CORS_ALLOW_CREDENTIALS = True
-ORS_ALLOW_ALL_ORIGINS=True
+CORS_ALLOW_ALL_ORIGINS = True
 # CORS_ALLOWED_ORIGINS = [
 #     "https://cubvoit.alexrubiks.fr",
 #     "https://cub-voit.vercel.app",
