@@ -146,7 +146,7 @@ def wca_callback(request):
     user.wca_id = wca_id
     user.save()
 
-    return redirect("https://api.cubvoit.alexrubiks.fr/account/profile?wca=success")
+    return redirect("https://cubvoit.alexrubiks.fr/account/profile?wca=success")
 
 
 class UpdateAvatarView(APIView):
