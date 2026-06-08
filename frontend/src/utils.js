@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8000";
+const API_BASE = "https://api.cubvoit.alexrubiks.fr";
 
 export const API_URLS = {
   token: `${API_BASE}/api/token/`,

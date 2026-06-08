@@ -197,7 +197,7 @@ export default function AccountProfile() {
                 <button
                   onClick={() => {
                     const token = localStorage.getItem("token");
-                    window.location.href = `http://localhost:8000/auth/wca/login/?token=${token}`;
+                    window.location.href = `https://api.cubvoit.alexrubiks.fr/auth/wca/login/?token=${token}`;
                   }}
                   className="flex-1 flex items-center justify-center gap-2 text-sm text-primary hover:text-primary-hover transition"
                 >

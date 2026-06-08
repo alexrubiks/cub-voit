@@ -111,7 +111,7 @@ def wca_login(request):
     params = {
         "client_id": "eHO1MDjbHiwrpJ_uorPdd8uYIr94K9EcHYtNAkJsdCs",
         "response_type": "code",
-        "redirect_uri": "http://localhost:8000/auth/wca/callback",
+        "redirect_uri": "https://api.cubvoit.alexrubiks.fr/auth/wca/callback",
         "scope": "public",
         "state": token,
     }
@@ -132,7 +132,7 @@ def wca_callback(request):
         "code": code,
         "client_id": "eHO1MDjbHiwrpJ_uorPdd8uYIr94K9EcHYtNAkJsdCs",
         "client_secret": WCA_SECRET,
-        "redirect_uri": "http://localhost:8000/auth/wca/callback",
+        "redirect_uri": "https://api.cubvoit.alexrubiks.fr/auth/wca/callback",
         "grant_type": "authorization_code",
     })
     wca_token = res.json()["access_token"]
@@ -146,7 +146,7 @@ def wca_callback(request):
     user.wca_id = wca_id
     user.save()
 
-    return redirect("http://localhost:5173/account/profile?wca=success")
+    return redirect("https://api.cubvoit.alexrubiks.fr/account/profile?wca=success")
 
 
 class UpdateAvatarView(APIView):
