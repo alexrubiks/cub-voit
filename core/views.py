@@ -156,8 +156,6 @@ class UpdateAvatarView(APIView):
     def patch(self, request):
         user = request.user
         serializer = CurrentUserSerializer(user, data=request.data, partial=True)
-        from django.core.files.storage import default_storage
-        print("STORAGE:", default_storage.__class__)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
